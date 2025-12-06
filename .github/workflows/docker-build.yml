@@ -88,8 +88,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
-          build-args: |
-            VITE_API_URL=http://localhost:8000
 
       - name: Generate deployment artifacts
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'

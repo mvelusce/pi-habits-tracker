@@ -190,6 +190,10 @@ def get_habit_health_aspect_correlations(
             if len(merged_df) < min_samples:
                 continue
             
+            # Skip if no variation in either variable (needed for correlation)
+            if merged_df["severity"].nunique() < 2 or merged_df["completed"].nunique() < 2:
+                continue
+            
             # Calculate Pearson correlation
             try:
                 correlation, p_value = stats.pearsonr(
@@ -214,7 +218,8 @@ def get_habit_health_aspect_correlations(
                     "significant": bool(significant),
                     "sample_size": int(len(merged_df))
                 })
-            except Exception:
+            except Exception as e:
+                # Silently skip errors in correlation calculation
                 continue
         
         # Sort by absolute correlation value

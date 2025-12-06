@@ -36,7 +36,7 @@ export default function Analytics() {
 
       setCorrelations(correlationsRes.data)
       setMoodTrends(trendsRes.data.data || [])
-      setHealthCorrelations(healthCorrelationsRes.data)
+      setHealthCorrelations(healthCorrelationsRes.data.results || [])
 
       // Calculate stats
       if (trendsRes.data.data && trendsRes.data.data.length > 0) {
@@ -117,23 +117,49 @@ export default function Analytics() {
         </button>
       </div>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
-          <div className="text-4xl font-bold">{stats.avgMood.toFixed(1)}</div>
-          <div className="text-blue-100 mt-1">Average Mood</div>
+      {/* Summary Stats - Only show for mood tab */}
+      {activeTab === 'mood' && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
+            <div className="text-4xl font-bold">{stats.avgMood.toFixed(1)}</div>
+            <div className="text-blue-100 mt-1">Average Mood</div>
+          </div>
+          
+          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md p-6 text-white">
+            <div className="text-4xl font-bold">{stats.totalEntries}</div>
+            <div className="text-green-100 mt-1">Mood Entries</div>
+          </div>
+          
+          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
+            <div className="text-2xl font-bold truncate">{stats.topHabit || 'N/A'}</div>
+            <div className="text-purple-100 mt-1">Top Correlated Habit</div>
+          </div>
         </div>
-        
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md p-6 text-white">
-          <div className="text-4xl font-bold">{stats.totalEntries}</div>
-          <div className="text-green-100 mt-1">Mood Entries</div>
-        </div>
-        
+      )}
+
+      {/* Health Stats - Show for health tab */}
+      {activeTab === 'health' && healthCorrelations && (
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
-          <div className="text-2xl font-bold truncate">{stats.topHabit}</div>
-          <div className="text-purple-100 mt-1">Top Correlated Habit</div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-4xl font-bold">{healthCorrelations.length}</div>
+              <div className="text-purple-100 mt-1">Health Aspects Tracked</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold">
+                {healthCorrelations.reduce((sum: number, aspect: any) => sum + aspect.correlations.filter((c: any) => c.significant).length, 0)}
+              </div>
+              <div className="text-purple-100 mt-1">Significant Correlations</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold">
+                {healthCorrelations.reduce((sum: number, aspect: any) => sum + aspect.correlations.length, 0)}
+              </div>
+              <div className="text-purple-100 mt-1">Total Correlations</div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Mood Trends */}
       {activeTab === 'mood' && <MoodTrendChart data={moodTrends} />}
@@ -144,8 +170,8 @@ export default function Analytics() {
       {/* Health Correlations */}
       {activeTab === 'health' && healthCorrelations && (
         <div className="space-y-6">
-          {healthCorrelations.results && healthCorrelations.results.length > 0 ? (
-            healthCorrelations.results.map((aspectData: any) => (
+          {healthCorrelations.length > 0 ? (
+            healthCorrelations.map((aspectData: any) => (
               <div key={aspectData.aspect_id} className="bg-white rounded-lg shadow-md p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-gray-800">

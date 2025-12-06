@@ -14,10 +14,10 @@ curl -sSL https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/in
 
 ```bash
 # Download docker-compose.yml
-wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/docker-compose.deploy.yml
+wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/docker-compose.prod.yml
 
 # Download .env.example
-wget -O .env https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/.env.deploy.example
+wget -O .env https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/.env.example
 
 # Create data directory
 mkdir -p data
@@ -56,10 +56,6 @@ DATABASE_URL=sqlite:///./data/habits_tracker.db
 # For PostgreSQL
 # DATABASE_URL=postgresql://user:password@postgres:5432/habits_tracker
 
-# API Configuration
-API_HOST=0.0.0.0
-API_PORT=8000
-
 # Environment
 ENVIRONMENT=production
 ```
@@ -91,7 +87,7 @@ frontend:
 ssh user@your-server.com
 
 # Run installation
-curl -sSL https://raw.githubusercontent.com/mvelusce/habits-tracker/master/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/install.sh | bash
 
 # Configure firewall
 sudo ufw allow 3000  # Frontend
@@ -108,7 +104,7 @@ curl -sSL https://get.docker.com | sh
 sudo usermod -aG docker $USER
 
 # Install habits tracker
-curl -sSL https://raw.githubusercontent.com/mvelusce/habits-tracker/master/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/install.sh | bash
 ```
 
 ### 4. Behind Reverse Proxy (Nginx, Traefik)

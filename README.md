@@ -27,30 +27,67 @@ A self-hosted application for tracking habits and mood with correlation analysis
 - Docker and Docker Compose installed
 - Alternatively: Python 3.11+ and Node.js 18+ for local development
 
-### Option 1: Docker Deployment (Recommended)
+### Option 1: Using Pre-built Images (Easiest for Deployment)
+
+**Perfect for Raspberry Pi and production deployments!**
+
+1. Download the deployment files:
+```bash
+mkdir -p ~/habits-tracker && cd ~/habits-tracker
+
+wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/docker-compose.prod.yml
+
+wget -O .env https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/.env.example
+```
+
+2. Create data directory:
+```bash
+mkdir -p data
+```
+
+3. Start the application:
+```bash
+docker compose up -d
+```
+
+4. Access the application:
+- Frontend: http://localhost:9797
+- Backend API: http://localhost:9696
+
+**📖 Full deployment guide**: See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions, configuration options, and troubleshooting.
+
+### Option 2: Building from Source (For Development)
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
-cd habits-tracker
+git clone https://github.com/mvelusce/pi-habits-tracker.git
+cd pi-habits-tracker
 ```
 
-2. Start the application:
+2. Create environment file (optional, to customize ports):
 ```bash
-docker-compose up -d
+cat > .env << 'EOF'
+BACKEND_PORT=9696
+FRONTEND_PORT=9797
+EOF
 ```
 
-3. Access the application:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Documentation: http://localhost:8000/docs
-
-4. Stop the application:
+3. Start the application:
 ```bash
-docker-compose down
+docker compose up -d
 ```
 
-### Option 2: Local Development
+4. Access the application:
+- Frontend: http://localhost:9797
+- Backend API: http://localhost:9696
+- API Documentation: http://localhost:9696/docs
+
+5. Stop the application:
+```bash
+docker compose down
+```
+
+### Option 3: Local Development
 
 #### Backend Setup
 
@@ -72,10 +109,10 @@ pip install -r requirements.txt
 
 4. Run the backend:
 ```bash
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 9696
 ```
 
-The API will be available at http://localhost:8000
+The API will be available at http://localhost:9696
 
 #### Frontend Setup
 
@@ -91,7 +128,7 @@ npm install
 
 3. Create environment file:
 ```bash
-cp .env.example .env
+echo "VITE_API_URL=http://localhost:9696" > .env
 ```
 
 4. Run the development server:
@@ -99,7 +136,7 @@ cp .env.example .env
 npm run dev
 ```
 
-The app will be available at http://localhost:3000
+The app will be available at http://localhost:5173
 
 ## 📱 Installing as PWA on Android
 
@@ -161,17 +198,20 @@ You can log multiple mood entries per day to track changes throughout the day.
 
 ### Environment Variables
 
-#### Backend
-Create a `.env` file in the `backend` directory:
+The application can be configured using a `.env` file in the root directory:
+
 ```env
-DATABASE_URL=sqlite:///./habits_tracker.db
+# Backend port (default: 9696)
+BACKEND_PORT=9696
+
+# Frontend port (default: 9797)
+FRONTEND_PORT=9797
+
+# API URL for frontend (used during build)
+VITE_API_URL=http://localhost:9696
 ```
 
-#### Frontend
-Create a `.env` file in the `frontend` directory:
-```env
-VITE_API_URL=http://localhost:8000
-```
+**Note**: When using pre-built images from GitHub Container Registry, the `VITE_API_URL` is baked into the frontend at build time. For custom backend URLs, you'll need to build the frontend yourself. See [DEPLOYMENT.md](DEPLOYMENT.md) for details.
 
 ### Database
 
@@ -213,8 +253,8 @@ habits-tracker/
 ### API Documentation
 
 The FastAPI backend provides interactive API documentation:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- Swagger UI: http://localhost:9696/docs
+- ReDoc: http://localhost:9696/redoc
 
 ### Adding New Features
 
@@ -273,14 +313,16 @@ MIT License - Feel free to use and modify for your own needs.
 - Check port 8000 is available
 
 ### Frontend won't connect to backend
-- Verify backend is running at http://localhost:8000
-- Check VITE_API_URL in frontend/.env
+- Verify backend is running at http://localhost:9696
+- Check VITE_API_URL in your .env file
 - Ensure CORS is properly configured
+- If using pre-built images on a remote server, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ### Docker issues
-- Run `docker-compose logs` to see error messages
-- Ensure ports 3000 and 8000 are available
-- Try `docker-compose down -v` to reset volumes
+- Run `docker compose logs` to see error messages
+- Ensure ports 9696 and 9797 are available
+- Try `docker compose down -v` to reset volumes
+- If pulling from GHCR fails, check that images exist: `docker pull ghcr.io/mvelusce/pi-habits-tracker-backend:latest`
 
 ### Database errors
 - Check write permissions for the database file

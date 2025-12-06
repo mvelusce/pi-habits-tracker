@@ -7,17 +7,17 @@ Install using pre-built Docker images from GitHub Container Registry:
 ### One-Line Install
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/mvelusce/habits-tracker/master/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/install.sh | bash
 ```
 
 ### Manual Install
 
 ```bash
 # Download docker-compose.yml
-wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/habits-tracker/master/docker-compose.deploy.yml
+wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/docker-compose.deploy.yml
 
 # Download .env.example
-wget -O .env https://raw.githubusercontent.com/mvelusce/habits-tracker/master/.env.deploy.example
+wget -O .env https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/.env.deploy.example
 
 # Create data directory
 mkdir -p data

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from app.database import engine, Base
 from app.routers import habits, mood, analytics, health_aspects, export
 
@@ -9,7 +10,11 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Habits Tracker API",
     description="API for tracking habits and mood with correlation analysis",
-    version="1.0.0"
+    version="1.0.0",
+    # Trust proxy headers for correct URL generation in redirects
+    root_path="",
+    proxy_headers=True,
+    forwarded_allow_ips="*"
 )
 
 # Configure CORS

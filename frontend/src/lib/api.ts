@@ -68,6 +68,18 @@ export const api = axios.create({
   },
 })
 
+// Add request interceptor to ensure trailing slashes for GET requests
+// This fixes 307 redirect issues with FastAPI
+api.interceptors.request.use((config) => {
+  if (config.method === 'get' && config.url && !config.url.includes('?')) {
+    // Add trailing slash if not present and no query params
+    if (!config.url.endsWith('/')) {
+      config.url = config.url + '/'
+    }
+  }
+  return config
+})
+
 // Types
 export interface Habit {
   id: number

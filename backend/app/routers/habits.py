@@ -49,12 +49,16 @@ def update_habit(habit_id: int, habit_update: schemas.HabitUpdate, db: Session =
 
 @router.delete("/{habit_id}")
 def delete_habit(habit_id: int, db: Session = Depends(get_db)):
-    """Delete a habit (soft delete by marking as inactive)"""
+    """Permanently delete a habit and all its entries"""
     db_habit = db.query(models.Habit).filter(models.Habit.id == habit_id).first()
     if not db_habit:
         raise HTTPException(status_code=404, detail="Habit not found")
     
-    db_habit.is_active = False
+    # Delete all associated habit entries first
+    db.query(models.HabitEntry).filter(models.HabitEntry.habit_id == habit_id).delete()
+    
+    # Delete the habit itself
+    db.delete(db_habit)
     db.commit()
     return {"message": "Habit deleted successfully"}
 

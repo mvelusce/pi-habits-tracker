@@ -30,11 +30,12 @@ export default function Habits() {
   const loadHabits = async () => {
     try {
       setLoading(true)
-      const response = await habitsApi.getAll()
+      const response = await habitsApi.getAll(showArchived)
       const allHabits = response.data
       
-      // Filter based on showArchived
-      const filtered = showArchived ? allHabits : allHabits.filter(h => h.is_active)
+      // When showArchived is true, the API returns all habits, so we need to filter for inactive ones
+      // When showArchived is false, the API already filters for active only
+      const filtered = showArchived ? allHabits.filter(h => !h.is_active) : allHabits
       setHabits(filtered)
       
       // Load stats for each habit

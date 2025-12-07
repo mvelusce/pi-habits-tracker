@@ -155,7 +155,9 @@ export interface HabitStats {
 
 // Habit API
 export const habitsApi = {
-  getAll: () => api.get<Habit[]>('/api/habits'),
+  getAll: (includeInactive?: boolean) => api.get<Habit[]>('/api/habits', {
+    params: { include_inactive: includeInactive }
+  }),
   getOne: (id: number) => api.get<Habit>(`/api/habits/${id}`),
   create: (data: Partial<Habit>) => api.post<Habit>('/api/habits', data),
   update: (id: number, data: Partial<Habit>) => api.put<Habit>(`/api/habits/${id}`, data),

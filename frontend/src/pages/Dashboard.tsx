@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { lifestyleFactorsApi, lifestyleFactorEntriesApi, wellbeingApi, LifestyleFactor } from '../lib/api'
 import { formatDate, formatDisplayDate, getMoodEmoji } from '../lib/utils'
 import LifestyleFactorCard from '../components/LifestyleFactorCard'
 import EditLifestyleFactorModal from '../components/EditLifestyleFactorModal'
-import { Calendar, TrendingUp } from 'lucide-react'
+import { Calendar, TrendingUp, Heart } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Dashboard() {
@@ -227,6 +228,25 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* Check In Button */}
+      <Link
+        to="/wellbeing"
+        className="block bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="bg-primary-100 p-3 rounded-lg">
+              <Heart className="text-primary-600" size={28} />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">Check In</h3>
+              <p className="text-sm text-gray-600">Log your well-being metrics for today</p>
+            </div>
+          </div>
+          <div className="text-2xl">→</div>
+        </div>
+      </Link>
 
       {/* Category Filter */}
       {categories.length > 1 && (

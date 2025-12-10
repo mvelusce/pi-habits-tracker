@@ -105,9 +105,19 @@ export interface MoodEntry {
   id: number
   date: string
   time: string
+  // Mood scores (1-5 scale, higher is better)
   mood_score: number
   energy_level?: number
+  // Stress & Cognitive (0-3 scale, lower is better for negative ones)
   stress_level?: number
+  anxiety_level?: number
+  rumination_level?: number
+  anger_level?: number
+  // Physical symptoms
+  general_health?: number  // 0-5 scale (higher is better)
+  sleep_quality?: number  // 0-3 scale (higher is better)
+  sweating_level?: number  // 0-3 scale (lower is better)
+  libido_level?: number  // 0-3 scale (higher is better)
   notes?: string
   tags?: string
   created_at: string

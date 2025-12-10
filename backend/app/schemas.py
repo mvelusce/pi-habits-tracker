@@ -53,9 +53,19 @@ class HabitEntry(HabitEntryBase):
 # Mood Entry Schemas
 class MoodEntryBase(BaseModel):
     date: date
-    mood_score: int = Field(ge=1, le=10)
-    energy_level: Optional[int] = Field(None, ge=1, le=10)
-    stress_level: Optional[int] = Field(None, ge=1, le=10)
+    # Mood scores (1-5 scale, higher is better)
+    mood_score: int = Field(ge=1, le=5)
+    energy_level: Optional[int] = Field(None, ge=1, le=5)
+    # Stress & Cognitive (0-3 scale, lower is better for negative ones)
+    stress_level: Optional[int] = Field(None, ge=0, le=3)
+    anxiety_level: Optional[int] = Field(None, ge=0, le=3)
+    rumination_level: Optional[int] = Field(None, ge=0, le=3)
+    anger_level: Optional[int] = Field(None, ge=0, le=3)
+    # Physical symptoms
+    general_health: Optional[int] = Field(None, ge=0, le=5)
+    sleep_quality: Optional[int] = Field(None, ge=0, le=3)
+    sweating_level: Optional[int] = Field(None, ge=0, le=3)
+    libido_level: Optional[int] = Field(None, ge=0, le=3)
     notes: Optional[str] = None
     tags: Optional[str] = None
 
@@ -63,9 +73,16 @@ class MoodEntryCreate(MoodEntryBase):
     pass
 
 class MoodEntryUpdate(BaseModel):
-    mood_score: Optional[int] = Field(None, ge=1, le=10)
-    energy_level: Optional[int] = Field(None, ge=1, le=10)
-    stress_level: Optional[int] = Field(None, ge=1, le=10)
+    mood_score: Optional[int] = Field(None, ge=1, le=5)
+    energy_level: Optional[int] = Field(None, ge=1, le=5)
+    stress_level: Optional[int] = Field(None, ge=0, le=3)
+    anxiety_level: Optional[int] = Field(None, ge=0, le=3)
+    rumination_level: Optional[int] = Field(None, ge=0, le=3)
+    anger_level: Optional[int] = Field(None, ge=0, le=3)
+    general_health: Optional[int] = Field(None, ge=0, le=5)
+    sleep_quality: Optional[int] = Field(None, ge=0, le=3)
+    sweating_level: Optional[int] = Field(None, ge=0, le=3)
+    libido_level: Optional[int] = Field(None, ge=0, le=3)
     notes: Optional[str] = None
     tags: Optional[str] = None
 
@@ -99,6 +116,13 @@ class MoodStats(BaseModel):
     average_mood: float
     average_energy: Optional[float]
     average_stress: Optional[float]
+    average_anxiety: Optional[float]
+    average_rumination: Optional[float]
+    average_anger: Optional[float]
+    average_general_health: Optional[float]
+    average_sleep_quality: Optional[float]
+    average_sweating: Optional[float]
+    average_libido: Optional[float]
     total_entries: int
     date_range: dict
 

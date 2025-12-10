@@ -37,9 +37,23 @@ class MoodEntry(Base):
     id = Column(Integer, primary_key=True, index=True)
     date = Column(Date, nullable=False)
     time = Column(DateTime, nullable=False)
-    mood_score = Column(Integer, nullable=False)  # 1-10 scale
-    energy_level = Column(Integer, nullable=True)  # 1-10 scale
-    stress_level = Column(Integer, nullable=True)  # 1-10 scale
+    
+    # Mood scores (1-5 scale, higher is better)
+    mood_score = Column(Integer, nullable=False)  # 1-5 scale
+    energy_level = Column(Integer, nullable=True)  # 1-5 scale
+    
+    # Stress & Cognitive (0-3 scale, lower is better for negative ones)
+    stress_level = Column(Integer, nullable=True)  # 0-3 scale (lower is better)
+    anxiety_level = Column(Integer, nullable=True)  # 0-3 scale (lower is better)
+    rumination_level = Column(Integer, nullable=True)  # 0-3 scale (lower is better)
+    anger_level = Column(Integer, nullable=True)  # 0-3 scale (lower is better)
+    
+    # Physical symptoms (0-5/0-3 scale, varies by metric)
+    general_health = Column(Integer, nullable=True)  # 0-5 scale (higher is better)
+    sleep_quality = Column(Integer, nullable=True)  # 0-3 scale (higher is better)
+    sweating_level = Column(Integer, nullable=True)  # 0-3 scale (lower is better)
+    libido_level = Column(Integer, nullable=True)  # 0-3 scale (higher is better)
+    
     notes = Column(Text, nullable=True)
     tags = Column(String, nullable=True)  # Comma-separated tags
     created_at = Column(DateTime, default=datetime.utcnow)

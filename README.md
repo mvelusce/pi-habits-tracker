@@ -342,15 +342,11 @@ For issues or questions, please open an issue on the repository.
 ## 🎯 Roadmap
 
 Potential future enhancements:
-- [ ] Multi-user support with authentication
-- [ ] Data export/import features
+- [ ] Protect app with user name and password
+- [ ] Make PWA works
 - [ ] More advanced analytics (time-lagged correlations)
-- [ ] Habit categories and goals
-- [ ] Notifications and reminders
 - [ ] Dark mode
 - [ ] Calendar heatmap view
-- [ ] Mobile native apps (React Native)
-- [ ] Integration with fitness trackers
 
 ---
 

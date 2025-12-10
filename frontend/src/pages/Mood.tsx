@@ -10,9 +10,16 @@ export default function HealthWellness() {
   const [recentEntries, setRecentEntries] = useState<MoodEntry[]>([])
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
-    mood_score: 5,
-    energy_level: 5,
-    stress_level: 5,
+    mood_score: 3,
+    energy_level: 3,
+    stress_level: 1,
+    anxiety_level: 1,
+    rumination_level: 1,
+    anger_level: 1,
+    general_health: 3,
+    sleep_quality: 2,
+    sweating_level: 1,
+    libido_level: 2,
     notes: '',
     tags: ''
   })
@@ -96,15 +103,29 @@ export default function HealthWellness() {
         mood_score: formData.mood_score,
         energy_level: formData.energy_level,
         stress_level: formData.stress_level,
+        anxiety_level: formData.anxiety_level,
+        rumination_level: formData.rumination_level,
+        anger_level: formData.anger_level,
+        general_health: formData.general_health,
+        sleep_quality: formData.sleep_quality,
+        sweating_level: formData.sweating_level,
+        libido_level: formData.libido_level,
         notes: formData.notes || undefined,
         tags: formData.tags || undefined
       })
 
       setRecentEntries([response.data, ...recentEntries])
       setFormData({
-        mood_score: 5,
-        energy_level: 5,
-        stress_level: 5,
+        mood_score: 3,
+        energy_level: 3,
+        stress_level: 1,
+        anxiety_level: 1,
+        rumination_level: 1,
+        anger_level: 1,
+        general_health: 3,
+        sleep_quality: 2,
+        sweating_level: 1,
+        libido_level: 2,
         notes: '',
         tags: ''
       })
@@ -174,6 +195,16 @@ export default function HealthWellness() {
     : null
   
   const isToday = formatDate(selectedDate) === formatDate(new Date())
+  
+  // Helper to display a field value with label
+  const displayField = (label: string, value: number | undefined, max: number, emoji: string) => {
+    if (value === undefined || value === null) return null
+    return (
+      <span className="text-sm bg-gray-100 px-2 py-1 rounded">
+        {emoji} {label}: {value}/{max}
+      </span>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -261,7 +292,7 @@ export default function HealthWellness() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold mb-1">Today's Mood</h3>
-              <p className="text-3xl font-bold">{averageToday.toFixed(1)}/10</p>
+              <p className="text-3xl font-bold">{averageToday.toFixed(1)}/5</p>
               <p className="text-sm text-purple-100 mt-1">{todayEntries.length} check-in(s)</p>
             </div>
             <div className="text-6xl">{getMoodEmoji(Math.round(averageToday))}</div>
@@ -284,23 +315,126 @@ export default function HealthWellness() {
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-6">
           <h3 className="text-xl font-semibold">How are you feeling?</h3>
 
-          <MoodPicker
-            value={formData.mood_score}
-            onChange={(value) => setFormData({ ...formData, mood_score: value })}
-            label="Overall Mood"
-          />
+          {/* Mood Section */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-700 border-b pb-2">Mood</h4>
+            
+            <MoodPicker
+              value={formData.mood_score}
+              onChange={(value) => setFormData({ ...formData, mood_score: value })}
+              label="Overall Mood"
+              min={1}
+              max={5}
+              showEmoji={true}
+              minLabel="Very Bad"
+              maxLabel="Excellent"
+            />
 
-          <MoodPicker
-            value={formData.energy_level}
-            onChange={(value) => setFormData({ ...formData, energy_level: value })}
-            label="Energy Level"
-          />
+            <MoodPicker
+              value={formData.energy_level}
+              onChange={(value) => setFormData({ ...formData, energy_level: value })}
+              label="Energy Level"
+              min={1}
+              max={5}
+              minLabel="Very Low"
+              maxLabel="Very High"
+            />
+          </div>
 
-          <MoodPicker
-            value={formData.stress_level}
-            onChange={(value) => setFormData({ ...formData, stress_level: value })}
-            label="Stress Level"
-          />
+          {/* Stress & Cognitive Section */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-700 border-b pb-2">Stress & Cognitive</h4>
+            
+            <MoodPicker
+              value={formData.stress_level}
+              onChange={(value) => setFormData({ ...formData, stress_level: value })}
+              label="Stress Level"
+              min={0}
+              max={3}
+              reversed={true}
+              minLabel="None"
+              maxLabel="Severe"
+            />
+
+            <MoodPicker
+              value={formData.anxiety_level}
+              onChange={(value) => setFormData({ ...formData, anxiety_level: value })}
+              label="Anxiety Level"
+              min={0}
+              max={3}
+              reversed={true}
+              minLabel="None"
+              maxLabel="Severe"
+            />
+
+            <MoodPicker
+              value={formData.rumination_level}
+              onChange={(value) => setFormData({ ...formData, rumination_level: value })}
+              label="Rumination Level"
+              min={0}
+              max={3}
+              reversed={true}
+              minLabel="None"
+              maxLabel="Severe"
+            />
+
+            <MoodPicker
+              value={formData.anger_level}
+              onChange={(value) => setFormData({ ...formData, anger_level: value })}
+              label="Anger Level"
+              min={0}
+              max={3}
+              reversed={true}
+              minLabel="None"
+              maxLabel="Severe"
+            />
+          </div>
+
+          {/* Physical Symptoms Section */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-gray-700 border-b pb-2">Physical Symptoms</h4>
+            
+            <MoodPicker
+              value={formData.general_health}
+              onChange={(value) => setFormData({ ...formData, general_health: value })}
+              label="General Health"
+              min={0}
+              max={5}
+              minLabel="Very Poor"
+              maxLabel="Excellent"
+            />
+
+            <MoodPicker
+              value={formData.sleep_quality}
+              onChange={(value) => setFormData({ ...formData, sleep_quality: value })}
+              label="Sleep Quality"
+              min={0}
+              max={3}
+              minLabel="Very Poor"
+              maxLabel="Excellent"
+            />
+
+            <MoodPicker
+              value={formData.sweating_level}
+              onChange={(value) => setFormData({ ...formData, sweating_level: value })}
+              label="Sweating Level"
+              min={0}
+              max={3}
+              reversed={true}
+              minLabel="None"
+              maxLabel="Severe"
+            />
+
+            <MoodPicker
+              value={formData.libido_level}
+              onChange={(value) => setFormData({ ...formData, libido_level: value })}
+              label="Libido / Male Confidence"
+              min={0}
+              max={3}
+              minLabel="Very Low"
+              maxLabel="High"
+            />
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -362,7 +496,7 @@ export default function HealthWellness() {
                   <div className="flex items-center space-x-3">
                     <span className="text-3xl">{getMoodEmoji(entry.mood_score)}</span>
                     <div>
-                      <p className="font-semibold text-lg text-gray-800">{entry.mood_score}/10</p>
+                      <p className="font-semibold text-lg text-gray-800">{entry.mood_score}/5</p>
                       <p className="text-sm text-gray-600">
                         {formatDisplayDate(entry.date)} • {new Date(entry.time).toLocaleTimeString()}
                       </p>
@@ -376,16 +510,22 @@ export default function HealthWellness() {
                   </button>
                 </div>
 
-                {(entry.energy_level || entry.stress_level) && (
-                  <div className="flex space-x-4 text-sm text-gray-600 mb-2">
-                    {entry.energy_level && (
-                      <span>⚡ Energy: {entry.energy_level}/10</span>
-                    )}
-                    {entry.stress_level && (
-                      <span>😰 Stress: {entry.stress_level}/10</span>
-                    )}
-                  </div>
-                )}
+                <div className="flex flex-wrap gap-2 text-sm text-gray-600 mb-2">
+                  {/* Mood metrics */}
+                  {displayField("Energy", entry.energy_level, 5, "⚡")}
+                  
+                  {/* Stress & Cognitive */}
+                  {displayField("Stress", entry.stress_level, 3, "😰")}
+                  {displayField("Anxiety", entry.anxiety_level, 3, "😟")}
+                  {displayField("Rumination", entry.rumination_level, 3, "🔄")}
+                  {displayField("Anger", entry.anger_level, 3, "😠")}
+                  
+                  {/* Physical symptoms */}
+                  {displayField("Health", entry.general_health, 5, "❤️")}
+                  {displayField("Sleep", entry.sleep_quality, 3, "😴")}
+                  {displayField("Sweating", entry.sweating_level, 3, "💦")}
+                  {displayField("Libido", entry.libido_level, 3, "💪")}
+                </div>
 
                 {entry.notes && (
                   <p className="text-gray-700 bg-white p-2 rounded mt-2">

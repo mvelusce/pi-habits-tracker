@@ -2,7 +2,7 @@
 
 ## 🚢 Using Pre-built Docker Images
 
-The easiest way to deploy Habits Tracker is using pre-built Docker images from GitHub Container Registry.
+The easiest way to deploy Wellness Log is using pre-built Docker images from GitHub Container Registry.
 
 ### One-Line Install
 

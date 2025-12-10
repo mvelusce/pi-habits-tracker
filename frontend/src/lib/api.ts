@@ -81,7 +81,7 @@ api.interceptors.request.use((config) => {
 })
 
 // Types
-export interface Habit {
+export interface LifestyleFactor {
   id: number
   name: string
   description?: string
@@ -92,9 +92,9 @@ export interface Habit {
   is_active: boolean
 }
 
-export interface HabitEntry {
+export interface LifestyleFactorEntry {
   id: number
-  habit_id: number
+  lifestyle_factor_id: number
   date: string
   completed: boolean
   notes?: string
@@ -124,17 +124,17 @@ export interface MoodEntry {
 }
 
 export interface CorrelationResult {
-  habit_name: string
-  habit_id: number
+  lifestyle_factor_name: string
+  lifestyle_factor_id: number
   correlation: number
   p_value: number
   significant: boolean
   sample_size: number
 }
 
-export interface HabitStats {
-  habit_id: number
-  habit_name: string
+export interface LifestyleFactorStats {
+  lifestyle_factor_id: number
+  lifestyle_factor_name: string
   total_days: number
   completed_days: number
   completion_rate: number
@@ -142,29 +142,29 @@ export interface HabitStats {
   longest_streak: number
 }
 
-// Habit API
-export const habitsApi = {
-  getAll: (includeInactive?: boolean) => api.get<Habit[]>('/api/habits', {
+// Lifestyle Factor API
+export const lifestyleFactorsApi = {
+  getAll: (includeInactive?: boolean) => api.get<LifestyleFactor[]>('/api/lifestyle-factors', {
     params: { include_inactive: includeInactive }
   }),
-  getOne: (id: number) => api.get<Habit>(`/api/habits/${id}`),
-  create: (data: Partial<Habit>) => api.post<Habit>('/api/habits', data),
-  update: (id: number, data: Partial<Habit>) => api.put<Habit>(`/api/habits/${id}`, data),
-  delete: (id: number) => api.delete(`/api/habits/${id}`),
-  archive: (id: number) => api.post<Habit>(`/api/habits/${id}/archive`),
-  unarchive: (id: number) => api.post<Habit>(`/api/habits/${id}/unarchive`),
-  getStats: (id: number) => api.get<HabitStats>(`/api/habits/${id}/stats`),
-  getCategories: () => api.get<{ categories: string[] }>('/api/habits/categories/list'),
+  getOne: (id: number) => api.get<LifestyleFactor>(`/api/lifestyle-factors/${id}`),
+  create: (data: Partial<LifestyleFactor>) => api.post<LifestyleFactor>('/api/lifestyle-factors', data),
+  update: (id: number, data: Partial<LifestyleFactor>) => api.put<LifestyleFactor>(`/api/lifestyle-factors/${id}`, data),
+  delete: (id: number) => api.delete(`/api/lifestyle-factors/${id}`),
+  archive: (id: number) => api.post<LifestyleFactor>(`/api/lifestyle-factors/${id}/archive`),
+  unarchive: (id: number) => api.post<LifestyleFactor>(`/api/lifestyle-factors/${id}/unarchive`),
+  getStats: (id: number) => api.get<LifestyleFactorStats>(`/api/lifestyle-factors/${id}/stats`),
+  getCategories: () => api.get<{ categories: string[] }>('/api/lifestyle-factors/categories/list'),
 }
 
-// Habit Entries API
-export const habitEntriesApi = {
-  create: (data: Partial<HabitEntry>) => api.post<HabitEntry>('/api/habits/entries', data),
-  getRange: (startDate: string, endDate: string, habitId?: number) => 
-    api.get<HabitEntry[]>('/api/habits/entries/range', {
-      params: { start_date: startDate, end_date: endDate, habit_id: habitId }
+// Lifestyle Factor Entries API
+export const lifestyleFactorEntriesApi = {
+  create: (data: Partial<LifestyleFactorEntry>) => api.post<LifestyleFactorEntry>('/api/lifestyle-factors/entries', data),
+  getRange: (startDate: string, endDate: string, lifestyleFactorId?: number) => 
+    api.get<LifestyleFactorEntry[]>('/api/lifestyle-factors/entries/range', {
+      params: { start_date: startDate, end_date: endDate, lifestyle_factor_id: lifestyleFactorId }
     }),
-  getByDate: (date: string) => api.get<HabitEntry[]>(`/api/habits/entries/date/${date}`),
+  getByDate: (date: string) => api.get<LifestyleFactorEntry[]>(`/api/lifestyle-factors/entries/date/${date}`),
 }
 
 // Mood API
@@ -190,16 +190,16 @@ export const analyticsApi = {
     api.get<CorrelationResult[]>('/api/analytics/correlations', {
       params: { start_date: startDate, end_date: endDate, min_samples: minSamples }
     }),
-  getHabitCorrelation: (habitId: number, startDate?: string, endDate?: string) => 
-    api.get(`/api/analytics/correlations/${habitId}`, {
+  getLifestyleFactorCorrelation: (lifestyleFactorId: number, startDate?: string, endDate?: string) => 
+    api.get(`/api/analytics/correlations/${lifestyleFactorId}`, {
       params: { start_date: startDate, end_date: endDate }
     }),
   getMoodTrends: (startDate?: string, endDate?: string) => 
     api.get('/api/analytics/trends/mood', {
       params: { start_date: startDate, end_date: endDate }
     }),
-  getHabitHeatmap: (habitId: number, year?: number) => 
-    api.get(`/api/analytics/heatmap/${habitId}`, {
+  getLifestyleFactorHeatmap: (lifestyleFactorId: number, year?: number) => 
+    api.get(`/api/analytics/heatmap/${lifestyleFactorId}`, {
       params: { year }
     }),
 }

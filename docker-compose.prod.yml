@@ -1,13 +1,13 @@
 services:
   backend:
-    image: ghcr.io/mvelusce/pi-habits-tracker-backend:latest
-    container_name: habits-tracker-backend
+    image: ghcr.io/mvelusce/wellness-log-backend:latest
+    container_name: wellness-log-backend
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
       - ./data:/app/data
     environment:
-      - DATABASE_URL=sqlite:///./data/habits_tracker.db
+      - DATABASE_URL=sqlite:///./data/wellness_log.db
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -16,8 +16,8 @@ services:
       retries: 3
 
   frontend:
-    image: ghcr.io/mvelusce/pi-habits-tracker-frontend:latest
-    container_name: habits-tracker-frontend
+    image: ghcr.io/mvelusce/wellness-log-frontend:latest
+    container_name: wellness-log-frontend
     ports:
       - "${FRONTEND_PORT:-3000}:80"
     environment:

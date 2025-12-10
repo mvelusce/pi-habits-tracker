@@ -1,23 +1,23 @@
 import { create } from 'zustand'
-import { Habit, HabitEntry, MoodEntry } from '../lib/api'
+import { LifestyleFactor, LifestyleFactorEntry, MoodEntry } from '../lib/api'
 
 interface Store {
-  habits: Habit[]
-  habitEntries: HabitEntry[]
+  lifestyleFactors: LifestyleFactor[]
+  lifestyleFactorEntries: LifestyleFactorEntry[]
   moodEntries: MoodEntry[]
   selectedDate: Date
   
-  setHabits: (habits: Habit[]) => void
-  setHabitEntries: (entries: HabitEntry[]) => void
+  setLifestyleFactors: (lifestyleFactors: LifestyleFactor[]) => void
+  setLifestyleFactorEntries: (entries: LifestyleFactorEntry[]) => void
   setMoodEntries: (entries: MoodEntry[]) => void
   setSelectedDate: (date: Date) => void
   
-  addHabit: (habit: Habit) => void
-  updateHabit: (id: number, habit: Partial<Habit>) => void
-  removeHabit: (id: number) => void
+  addLifestyleFactor: (lifestyleFactor: LifestyleFactor) => void
+  updateLifestyleFactor: (id: number, lifestyleFactor: Partial<LifestyleFactor>) => void
+  removeLifestyleFactor: (id: number) => void
   
-  addHabitEntry: (entry: HabitEntry) => void
-  updateHabitEntry: (id: number, entry: Partial<HabitEntry>) => void
+  addLifestyleFactorEntry: (entry: LifestyleFactorEntry) => void
+  updateLifestyleFactorEntry: (id: number, entry: Partial<LifestyleFactorEntry>) => void
   
   addMoodEntry: (entry: MoodEntry) => void
   updateMoodEntry: (id: number, entry: Partial<MoodEntry>) => void
@@ -25,37 +25,37 @@ interface Store {
 }
 
 export const useStore = create<Store>((set) => ({
-  habits: [],
-  habitEntries: [],
+  lifestyleFactors: [],
+  lifestyleFactorEntries: [],
   moodEntries: [],
   selectedDate: new Date(),
   
-  setHabits: (habits) => set({ habits }),
-  setHabitEntries: (entries) => set({ habitEntries: entries }),
+  setLifestyleFactors: (lifestyleFactors) => set({ lifestyleFactors }),
+  setLifestyleFactorEntries: (entries) => set({ lifestyleFactorEntries: entries }),
   setMoodEntries: (entries) => set({ moodEntries: entries }),
   setSelectedDate: (date) => set({ selectedDate: date }),
   
-  addHabit: (habit) => set((state) => ({ habits: [...state.habits, habit] })),
-  updateHabit: (id, habitUpdate) => set((state) => ({
-    habits: state.habits.map((h) => h.id === id ? { ...h, ...habitUpdate } : h)
+  addLifestyleFactor: (lifestyleFactor) => set((state) => ({ lifestyleFactors: [...state.lifestyleFactors, lifestyleFactor] })),
+  updateLifestyleFactor: (id, lifestyleFactorUpdate) => set((state) => ({
+    lifestyleFactors: state.lifestyleFactors.map((lf) => lf.id === id ? { ...lf, ...lifestyleFactorUpdate } : lf)
   })),
-  removeHabit: (id) => set((state) => ({
-    habits: state.habits.filter((h) => h.id !== id)
+  removeLifestyleFactor: (id) => set((state) => ({
+    lifestyleFactors: state.lifestyleFactors.filter((lf) => lf.id !== id)
   })),
   
-  addHabitEntry: (entry) => set((state) => {
-    const existing = state.habitEntries.findIndex(
-      (e) => e.habit_id === entry.habit_id && e.date === entry.date
+  addLifestyleFactorEntry: (entry) => set((state) => {
+    const existing = state.lifestyleFactorEntries.findIndex(
+      (e) => e.lifestyle_factor_id === entry.lifestyle_factor_id && e.date === entry.date
     )
     if (existing >= 0) {
-      const newEntries = [...state.habitEntries]
+      const newEntries = [...state.lifestyleFactorEntries]
       newEntries[existing] = entry
-      return { habitEntries: newEntries }
+      return { lifestyleFactorEntries: newEntries }
     }
-    return { habitEntries: [...state.habitEntries, entry] }
+    return { lifestyleFactorEntries: [...state.lifestyleFactorEntries, entry] }
   }),
-  updateHabitEntry: (id, entryUpdate) => set((state) => ({
-    habitEntries: state.habitEntries.map((e) => e.id === id ? { ...e, ...entryUpdate } : e)
+  updateLifestyleFactorEntry: (id, entryUpdate) => set((state) => ({
+    lifestyleFactorEntries: state.lifestyleFactorEntries.map((e) => e.id === id ? { ...e, ...entryUpdate } : e)
   })),
   
   addMoodEntry: (entry) => set((state) => ({ moodEntries: [...state.moodEntries, entry] })),

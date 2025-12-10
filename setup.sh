@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Habits Tracker Setup Script
+# Wellness Log Setup Script
 
-echo "🎯 Setting up Habits Tracker..."
+echo "🌟 Setting up Wellness Log..."
 echo ""
 
 # Check if Docker is installed
@@ -45,7 +45,7 @@ docker-compose up -d --build
 
 if [ $? -eq 0 ]; then
     echo ""
-    echo "✅ Habits Tracker is now running!"
+    echo "✅ Wellness Log is now running!"
     echo ""
     echo "📱 Access your app:"
     echo "   Frontend: http://localhost:3000"

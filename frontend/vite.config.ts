@@ -13,9 +13,9 @@ export default defineConfig({
         enabled: true
       },
       manifest: {
-        name: 'Habits Tracker',
-        short_name: 'Habits',
-        description: 'Track your habits and mood with correlation analysis',
+        name: 'Wellness Log',
+        short_name: 'Wellness',
+        description: 'Track your wellness, habits, and mood with insights',
         theme_color: '#3B82F6',
         background_color: '#ffffff',
         display: 'standalone',

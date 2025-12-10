@@ -1,7 +1,7 @@
 {
-  "name": "Habits Tracker",
-  "short_name": "Habits",
-  "description": "Track your habits and mood with correlation analysis",
+  "name": "Wellness Log",
+  "short_name": "Wellness",
+  "description": "Track your wellness, habits, and mood with insights",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

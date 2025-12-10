@@ -11,7 +11,7 @@ export default function Layout({ children }: LayoutProps) {
   
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/habits', label: 'Habits', icon: CheckSquare },
+    { path: '/lifestyleFactors', label: 'Lifestyle Factors', icon: CheckSquare },
     { path: '/health', label: 'Health', icon: Heart },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 },
   ]
@@ -22,7 +22,7 @@ export default function Layout({ children }: LayoutProps) {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <h1 className="text-2xl font-bold text-primary-600">🎯 Habits Tracker</h1>
+            <h1 className="text-2xl font-bold text-primary-600">🌟 Wellness Log</h1>
           </div>
         </div>
       </header>

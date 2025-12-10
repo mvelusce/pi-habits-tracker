@@ -116,7 +116,7 @@ Works on all Raspberry Pi models with Docker support:
 curl -sSL https://get.docker.com | sh
 sudo usermod -aG docker $USER
 
-# Install habits tracker
+# Install wellness log
 curl -sSL https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/install.sh | bash
 ```
 

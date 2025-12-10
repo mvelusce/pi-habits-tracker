@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Import legacy habit data from CSV files into the new habits tracker database.
+Import legacy habit data from CSV files into the wellness log database.
 
 Usage:
     python import_legacy_data.py --habits=../data/Habits.csv --checkmarks=../data/Checkmarks.csv

@@ -1,24 +1,24 @@
 import { useState } from 'react'
-import { Habit, HabitEntry } from '../lib/api'
+import { LifestyleFactor, LifestyleFactorEntry } from '../lib/api'
 import { Check, Edit2, Trash2, Archive } from 'lucide-react'
 
-interface HabitCardProps {
-  habit: Habit
-  entry?: HabitEntry
+interface LifestyleFactorCardProps {
+  lifestyleFactor: LifestyleFactor
+  entry?: LifestyleFactorEntry
   onToggle: (completed: boolean) => void
   onEdit: () => void
   onDelete: () => void
   onArchive?: () => void
 }
 
-export default function HabitCard({ habit, entry, onToggle, onEdit, onDelete, onArchive }: HabitCardProps) {
+export default function LifestyleFactorCard({ lifestyleFactor, entry, onToggle, onEdit, onDelete, onArchive }: LifestyleFactorCardProps) {
   const [showMenu, setShowMenu] = useState(false)
   const isCompleted = entry?.completed || false
 
   return (
     <div
       className="relative bg-white rounded-lg shadow-md p-4 transition-all hover:shadow-lg"
-      style={{ borderLeft: `4px solid ${habit.color}` }}
+      style={{ borderLeft: `4px solid ${lifestyleFactor.color}` }}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3 flex-1">
@@ -30,19 +30,19 @@ export default function HabitCard({ habit, entry, onToggle, onEdit, onDelete, on
                 : 'border-2 border-gray-300 hover:border-primary-500'
             }`}
           >
-            {isCompleted ? <Check size={24} /> : habit.icon || '✓'}
+            {isCompleted ? <Check size={24} /> : lifestyleFactor.icon || '✓'}
           </button>
           
           <div className="flex-1">
             <h3 className={`font-semibold text-lg text-gray-800 ${isCompleted ? 'line-through text-gray-500' : ''}`}>
-              {habit.name}
+              {lifestyleFactor.name}
             </h3>
-            {habit.description && (
-              <p className="text-sm text-gray-600">{habit.description}</p>
+            {lifestyleFactor.description && (
+              <p className="text-sm text-gray-600">{lifestyleFactor.description}</p>
             )}
-            {habit.category && habit.category !== 'General' && (
+            {lifestyleFactor.category && lifestyleFactor.category !== 'General' && (
               <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-primary-100 text-primary-700 rounded-full">
-                {habit.category}
+                {lifestyleFactor.category}
               </span>
             )}
           </div>

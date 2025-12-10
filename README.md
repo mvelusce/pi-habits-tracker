@@ -1,12 +1,12 @@
-# 🎯 Habits Tracker
+# 🌟 Wellness Log
 
-A self-hosted application for tracking habits and mood with correlation analysis. Track your daily habits, log your mood throughout the day, and discover patterns between your habits and how you feel.
+A self-hosted application for tracking lifestyle factors and mood with correlation analysis. Track your daily lifestyle factors, log your mood throughout the day, and discover patterns between your lifestyle factors and how you feel.
 
 ## ✨ Features
 
-- **📊 Habit Tracking**: Create and track multiple daily habits
+- **📊 Lifestyle Factor Tracking**: Create and track multiple daily lifestyle factors
 - **😊 Mood Logging**: Record your mood, energy, and stress levels throughout the day
-- **📈 Correlation Analysis**: Discover statistical relationships between your habits and mood
+- **📈 Correlation Analysis**: Discover statistical relationships between your lifestyle factors and mood
 - **📱 Progressive Web App**: Works on web and can be installed on Android devices
 - **🏠 Self-Hosted**: Your data stays on your server
 - **🎨 Modern UI**: Beautiful, responsive interface built with React and Tailwind CSS
@@ -154,15 +154,15 @@ The app will be available at http://localhost:5173
 
 ### Creating Habits
 
-1. Navigate to the "Habits" tab
-2. Click "New Habit"
+1. Navigate to the "Lifestyle Factors" tab
+2. Click "New Lifestyle Factor"
 3. Enter a name, description, choose a color and icon
-4. Save your habit
+4. Save your lifestyle factor
 
 ### Tracking Habits
 
 1. Go to the "Dashboard" tab
-2. Check off habits as you complete them
+2. Check off lifestyle factors as you complete them
 3. Use the date selector to view or update past dates
 
 ### Logging Mood
@@ -181,15 +181,15 @@ You can log multiple mood entries per day to track changes throughout the day.
 2. Select a time period (7, 14, 30, 60, or 90 days)
 3. View:
    - Mood trends over time
-   - Habit-mood correlations
+   - Lifestyle factor-mood correlations
    - Statistical significance indicators
    - Insights and patterns
 
 ### Understanding Correlations
 
 - **Correlation Range**: -1.0 to +1.0
-  - **Positive** (0 to +1): Habit completion associated with better mood
-  - **Negative** (-1 to 0): Habit completion associated with worse mood
+  - **Positive** (0 to +1): Lifestyle factor completion associated with better mood
+  - **Negative** (-1 to 0): Lifestyle factor completion associated with worse mood
   - **Near Zero**: Little to no relationship
 
 - **Strength**:
@@ -240,7 +240,7 @@ habits-tracker/
 │   │   ├── models.py         # SQLAlchemy models
 │   │   ├── schemas.py        # Pydantic schemas
 │   │   └── routers/
-│   │       ├── habits.py     # Habit endpoints
+│   │       ├── lifestyle_factors.py     # Lifestyle factor endpoints
 │   │       ├── mood.py       # Mood endpoints
 │   │       └── analytics.py  # Analytics endpoints
 │   ├── requirements.txt
@@ -272,8 +272,8 @@ The FastAPI backend provides interactive API documentation:
 
 ### Tables
 
-- **habits**: Habit definitions (name, color, icon, etc.)
-- **habit_entries**: Daily habit completion records
+- **lifestyle_factors**: Lifestyle factor definitions (name, color, icon, etc.)
+- **lifestyle_factor_entries**: Daily lifestyle factor completion records
 - **mood_entries**: Mood, energy, and stress logs
 
 ## 🔒 Security Considerations

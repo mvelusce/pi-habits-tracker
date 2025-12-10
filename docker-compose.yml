@@ -1,13 +1,13 @@
 services:
   backend:
     build: ./backend
-    container_name: habits-tracker-backend
+    container_name: wellness-log-backend
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
       - ./data:/app/data
     environment:
-      - DATABASE_URL=sqlite:///./data/habits_tracker.db
+      - DATABASE_URL=sqlite:///./data/wellness_log.db
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -20,7 +20,7 @@ services:
       context: ./frontend
       args:
         - VITE_API_URL=${VITE_API_URL:-}
-    container_name: habits-tracker-frontend
+    container_name: wellness-log-frontend
     ports:
       - "${FRONTEND_PORT:-3000}:80"
     environment:

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Response
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import Habit, HabitEntry, MoodEntry
+from app.models import LifestyleFactor, LifestyleFactorEntry, MoodEntry
 from datetime import datetime
 import csv
 import io
@@ -10,10 +10,10 @@ import io
 router = APIRouter()
 
 
-@router.get("/habits/export")
-async def export_habits(db: Session = Depends(get_db)):
-    """Export all habits to CSV."""
-    habits = db.query(Habit).all()
+@router.get("/lifestyle-factors/export")
+async def export_lifestyle_factors(db: Session = Depends(get_db)):
+    """Export all lifestyle factors to CSV."""
+    lifestyle_factors = db.query(LifestyleFactor).all()
     
     output = io.StringIO()
     writer = csv.writer(output)
@@ -22,38 +22,38 @@ async def export_habits(db: Session = Depends(get_db)):
     writer.writerow(['id', 'name', 'description', 'color', 'icon', 'is_active', 'created_at'])
     
     # Write data
-    for habit in habits:
+    for lifestyle_factor in lifestyle_factors:
         writer.writerow([
-            habit.id,
-            habit.name,
-            habit.description or '',
-            habit.color,
-            habit.icon or '',
-            habit.is_active,
-            habit.created_at.isoformat()
+            lifestyle_factor.id,
+            lifestyle_factor.name,
+            lifestyle_factor.description or '',
+            lifestyle_factor.color,
+            lifestyle_factor.icon or '',
+            lifestyle_factor.is_active,
+            lifestyle_factor.created_at.isoformat()
         ])
     
     output.seek(0)
     return StreamingResponse(
         iter([output.getvalue()]),
         media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=habits_export.csv"}
+        headers={"Content-Disposition": "attachment; filename=wellness_log_lifestyle_factors.csv"}
     )
 
 
-@router.get("/habits/entries/export")
-async def export_habit_entries(
+@router.get("/lifestyle-factors/entries/export")
+async def export_lifestyle_factor_entries(
     start_date: str = None,
     end_date: str = None,
     db: Session = Depends(get_db)
 ):
-    """Export habit entries to CSV."""
-    query = db.query(HabitEntry)
+    """Export lifestyle factor entries to CSV."""
+    query = db.query(LifestyleFactorEntry)
     
     if start_date:
-        query = query.filter(HabitEntry.date >= start_date)
+        query = query.filter(LifestyleFactorEntry.date >= start_date)
     if end_date:
-        query = query.filter(HabitEntry.date <= end_date)
+        query = query.filter(LifestyleFactorEntry.date <= end_date)
     
     entries = query.all()
     
@@ -61,15 +61,15 @@ async def export_habit_entries(
     writer = csv.writer(output)
     
     # Write header
-    writer.writerow(['id', 'habit_id', 'habit_name', 'date', 'completed', 'notes', 'created_at'])
+    writer.writerow(['id', 'lifestyle_factor_id', 'lifestyle_factor_name', 'date', 'completed', 'notes', 'created_at'])
     
     # Write data
     for entry in entries:
-        habit = db.query(Habit).filter(Habit.id == entry.habit_id).first()
+        lifestyle_factor = db.query(LifestyleFactor).filter(LifestyleFactor.id == entry.lifestyle_factor_id).first()
         writer.writerow([
             entry.id,
-            entry.habit_id,
-            habit.name if habit else '',
+            entry.lifestyle_factor_id,
+            lifestyle_factor.name if lifestyle_factor else '',
             entry.date.isoformat(),
             entry.completed,
             entry.notes or '',
@@ -77,7 +77,7 @@ async def export_habit_entries(
         ])
     
     output.seek(0)
-    filename = f"habit_entries_export_{datetime.now().strftime('%Y%m%d')}.csv"
+    filename = f"lifestyle_factor_entries_export_{datetime.now().strftime('%Y%m%d')}.csv"
     return StreamingResponse(
         iter([output.getvalue()]),
         media_type="text/csv",
@@ -135,7 +135,7 @@ async def export_mood_entries(
 
 @router.get("/export/all")
 async def export_all_data(db: Session = Depends(get_db)):
-    """Export all data (habits, entries, mood) to a single CSV with multiple sheets concept."""
+    """Export all data (lifestyle factors, entries, mood) to a single CSV with multiple sheets concept."""
     # For simplicity, we'll create a ZIP file with multiple CSVs
     import zipfile
     from io import BytesIO
@@ -143,31 +143,31 @@ async def export_all_data(db: Session = Depends(get_db)):
     zip_buffer = BytesIO()
     
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
-        # Export habits
-        habits = db.query(Habit).all()
-        habits_csv = io.StringIO()
-        writer = csv.writer(habits_csv)
+        # Export lifestyle factors
+        lifestyle_factors = db.query(LifestyleFactor).all()
+        lifestyle_factors_csv = io.StringIO()
+        writer = csv.writer(lifestyle_factors_csv)
         writer.writerow(['id', 'name', 'description', 'color', 'icon', 'is_active', 'created_at'])
-        for habit in habits:
+        for lifestyle_factor in lifestyle_factors:
             writer.writerow([
-                habit.id, habit.name, habit.description or '', habit.color,
-                habit.icon or '', habit.is_active, habit.created_at.isoformat()
+                lifestyle_factor.id, lifestyle_factor.name, lifestyle_factor.description or '', lifestyle_factor.color,
+                lifestyle_factor.icon or '', lifestyle_factor.is_active, lifestyle_factor.created_at.isoformat()
             ])
-        zip_file.writestr('habits.csv', habits_csv.getvalue())
+        zip_file.writestr('lifestyle_factors.csv', lifestyle_factors_csv.getvalue())
         
-        # Export habit entries
-        entries = db.query(HabitEntry).all()
+        # Export lifestyle factor entries
+        entries = db.query(LifestyleFactorEntry).all()
         entries_csv = io.StringIO()
         writer = csv.writer(entries_csv)
-        writer.writerow(['id', 'habit_id', 'habit_name', 'date', 'completed', 'notes', 'created_at'])
+        writer.writerow(['id', 'lifestyle_factor_id', 'lifestyle_factor_name', 'date', 'completed', 'notes', 'created_at'])
         for entry in entries:
-            habit = db.query(Habit).filter(Habit.id == entry.habit_id).first()
+            lifestyle_factor = db.query(LifestyleFactor).filter(LifestyleFactor.id == entry.lifestyle_factor_id).first()
             writer.writerow([
-                entry.id, entry.habit_id, habit.name if habit else '',
+                entry.id, entry.lifestyle_factor_id, lifestyle_factor.name if lifestyle_factor else '',
                 entry.date.isoformat(), entry.completed, entry.notes or '',
                 entry.created_at.isoformat()
             ])
-        zip_file.writestr('habit_entries.csv', entries_csv.getvalue())
+        zip_file.writestr('lifestyle_factor_entries.csv', entries_csv.getvalue())
         
         # Export mood entries
         mood_entries = db.query(MoodEntry).all()
@@ -183,7 +183,7 @@ async def export_all_data(db: Session = Depends(get_db)):
         zip_file.writestr('mood_entries.csv', mood_csv.getvalue())
     
     zip_buffer.seek(0)
-    filename = f"habits_tracker_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+    filename = f"wellness_log_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
     
     return StreamingResponse(
         iter([zip_buffer.getvalue()]),

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Habits Tracker - Quick Install Script
-# This script downloads and sets up the habits tracker using pre-built Docker images
+# Wellness Log - Quick Install Script
+# This script downloads and sets up the wellness log using pre-built Docker images
 
 set -e
 
@@ -9,7 +9,7 @@ REPO="mvelusce/habits-tracker"
 BRANCH="${BRANCH:-master}"  # or main
 GITHUB_RAW="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
 
-echo "🎯 Habits Tracker - Quick Install"
+echo "🌟 Wellness Log - Quick Install"
 echo "=================================="
 echo ""
 
@@ -91,7 +91,7 @@ docker-compose up -d
 
 if [ $? -eq 0 ]; then
     echo ""
-    echo "✅ Habits Tracker is now running!"
+    echo "✅ Wellness Log is now running!"
     echo ""
     echo "📱 Access your app:"
     echo "   Frontend: http://localhost:3000"

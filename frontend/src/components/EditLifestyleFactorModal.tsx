@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Habit } from '../lib/api'
+import { LifestyleFactor } from '../lib/api'
 import { X } from 'lucide-react'
 
-interface EditHabitModalProps {
-  habit: Habit
+interface EditLifestyleFactorModalProps {
+  lifestyleFactor: LifestyleFactor
   isOpen: boolean
   onClose: () => void
-  onSave: (updatedHabit: Partial<Habit>) => Promise<void>
+  onSave: (updatedLifestyleFactor: Partial<LifestyleFactor>) => Promise<void>
 }
 
 const colorOptions = [
@@ -24,31 +24,31 @@ const iconOptions = ['✓', '💪', '🏃', '📚', '🧘', '💧', '🍎', '�
 
 const defaultCategories = ['General', 'Health', 'Fitness', 'Nutrition', 'Supplements', 'Lifestyle', 'Wellness']
 
-export default function EditHabitModal({ habit, isOpen, onClose, onSave }: EditHabitModalProps) {
+export default function EditLifestyleFactorModal({ lifestyleFactor, isOpen, onClose, onSave }: EditLifestyleFactorModalProps) {
   const [formData, setFormData] = useState({
-    name: habit.name,
-    description: habit.description || '',
-    color: habit.color,
-    icon: habit.icon || '✓',
-    category: habit.category || 'General',
+    name: lifestyleFactor.name,
+    description: lifestyleFactor.description || '',
+    color: lifestyleFactor.color,
+    icon: lifestyleFactor.icon || '✓',
+    category: lifestyleFactor.category || 'General',
   })
   const [saving, setSaving] = useState(false)
   const [isCustomCategory, setIsCustomCategory] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
-      const category = habit.category || 'General'
+      const category = lifestyleFactor.category || 'General'
       setFormData({
-        name: habit.name,
-        description: habit.description || '',
-        color: habit.color,
-        icon: habit.icon || '✓',
+        name: lifestyleFactor.name,
+        description: lifestyleFactor.description || '',
+        color: lifestyleFactor.color,
+        icon: lifestyleFactor.icon || '✓',
         category,
       })
       // Check if it's a custom category
       setIsCustomCategory(!defaultCategories.includes(category))
     }
-  }, [habit, isOpen])
+  }, [lifestyleFactor, isOpen])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -57,7 +57,7 @@ export default function EditHabitModal({ habit, isOpen, onClose, onSave }: EditH
       await onSave(formData)
       onClose()
     } catch (error) {
-      console.error('Error saving habit:', error)
+      console.error('Error saving lifestyleFactor:', error)
     } finally {
       setSaving(false)
     }
@@ -69,7 +69,7 @@ export default function EditHabitModal({ habit, isOpen, onClose, onSave }: EditH
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-800">Edit Habit</h2>
+          <h2 className="text-xl font-bold text-gray-800">Edit LifestyleFactor</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full"
@@ -81,7 +81,7 @@ export default function EditHabitModal({ habit, isOpen, onClose, onSave }: EditH
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Habit Name *
+              LifestyleFactor Name *
             </label>
             <input
               type="text"

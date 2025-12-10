@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Habits Tracker is now configured as a **Progressive Web App (PWA)**, which allows users to install it on their devices (Android, iOS, desktop) and use it like a native app.
+The Wellness Log is now configured as a **Progressive Web App (PWA)**, which allows users to install it on their devices (Android, iOS, desktop) and use it like a native app.
 
 ## What Changed
 
@@ -30,7 +30,7 @@ The Habits Tracker is now configured as a **Progressive Web App (PWA)**, which a
 
 ### Android (Chrome/Brave)
 
-1. Open your habits tracker in Chrome or Brave
+1. Open your wellness log in Chrome or Brave
 2. Look for the install prompt (should appear automatically after a few seconds)
 3. Or tap the menu (⋮) → "Install app" or "Add to Home screen"
 4. The app will install and create an icon on your home screen
@@ -38,7 +38,7 @@ The Habits Tracker is now configured as a **Progressive Web App (PWA)**, which a
 
 ### iOS (Safari)
 
-1. Open your habits tracker in Safari
+1. Open your wellness log in Safari
 2. Tap the Share button (□↑)
 3. Scroll down and tap "Add to Home Screen"
 4. Customize the name if desired
@@ -47,9 +47,9 @@ The Habits Tracker is now configured as a **Progressive Web App (PWA)**, which a
 
 ### Desktop (Chrome/Edge/Brave)
 
-1. Open your habits tracker
+1. Open your wellness log
 2. Look for the install icon (⊕) in the address bar
-3. Or go to Menu → "Install Habits Tracker"
+3. Or go to Menu → "Install Wellness Log"
 4. The app will install and can be launched from your apps menu
 
 ## Installation Criteria

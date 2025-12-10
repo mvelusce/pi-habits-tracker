@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useStore } from '../store/useStore'
-import { habitsApi, habitEntriesApi, moodApi, Habit } from '../lib/api'
+import { lifestyleFactorsApi, lifestyleFactorEntriesApi, moodApi, LifestyleFactor } from '../lib/api'
 import { formatDate, formatDisplayDate, getMoodEmoji } from '../lib/utils'
-import HabitCard from '../components/HabitCard'
-import EditHabitModal from '../components/EditHabitModal'
+import LifestyleFactorCard from '../components/LifestyleFactorCard'
+import EditLifestyleFactorModal from '../components/EditLifestyleFactorModal'
 import { Calendar, TrendingUp } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Dashboard() {
-  const { habits, setHabits, habitEntries, setHabitEntries, selectedDate, setSelectedDate } = useStore()
+  const { lifestyleFactors, setLifestyleFactors, lifestyleFactorEntries, setLifestyleFactorEntries, selectedDate, setSelectedDate } = useStore()
   const [loading, setLoading] = useState(true)
   const [todayMood, setTodayMood] = useState<number | null>(null)
-  const [editingHabit, setEditingHabit] = useState<Habit | null>(null)
+  const [editingLifestyleFactor, setEditingLifestyleFactor] = useState<LifestyleFactor | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [categories, setCategories] = useState<string[]>([])
 
@@ -24,13 +24,13 @@ export default function Dashboard() {
     try {
       setLoading(true)
       const [habitsRes, entriesRes, moodRes] = await Promise.all([
-        habitsApi.getAll(),
-        habitEntriesApi.getByDate(formatDate(selectedDate)),
+        lifestyleFactorsApi.getAll(),
+        lifestyleFactorEntriesApi.getByDate(formatDate(selectedDate)),
         moodApi.getByDate(formatDate(selectedDate))
       ])
       
-      setHabits(habitsRes.data)
-      setHabitEntries(entriesRes.data)
+      setLifestyleFactors(habitsRes.data)
+      setLifestyleFactorEntries(entriesRes.data)
       
       if (moodRes.data.length > 0) {
         const avgMood = moodRes.data.reduce((sum: number, m: any) => sum + m.mood_score, 0) / moodRes.data.length
@@ -48,7 +48,7 @@ export default function Dashboard() {
 
   const loadCategories = async () => {
     try {
-      const response = await habitsApi.getCategories()
+      const response = await lifestyleFactorsApi.getCategories()
       const uniqueCategories = ['All', ...response.data.categories]
       setCategories(uniqueCategories)
     } catch (error) {
@@ -56,70 +56,70 @@ export default function Dashboard() {
     }
   }
 
-  const handleEditHabit = async (updatedData: Partial<Habit>) => {
-    if (!editingHabit) return
+  const handleEditLifestyleFactor = async (updatedData: Partial<LifestyleFactor>) => {
+    if (!editingLifestyleFactor) return
     
     try {
-      await habitsApi.update(editingHabit.id, updatedData)
-      toast.success('Habit updated!')
+      await lifestyleFactorsApi.update(editingLifestyleFactor.id, updatedData)
+      toast.success('LifestyleFactor updated!')
       loadData()
-      setEditingHabit(null)
+      setEditingLifestyleFactor(null)
     } catch (error) {
-      console.error('Error updating habit:', error)
-      toast.error('Failed to update habit')
+      console.error('Error updating lifestyleFactor:', error)
+      toast.error('Failed to update lifestyle factor')
     }
   }
 
-  const handleArchiveHabit = async (id: number, name: string) => {
+  const handleArchiveLifestyleFactor = async (id: number, name: string) => {
     if (!confirm(`Archive "${name}"?`)) return
     
     try {
-      await habitsApi.archive(id)
-      toast.success('Habit archived')
+      await lifestyleFactorsApi.archive(id)
+      toast.success('LifestyleFactor archived')
       loadData()
     } catch (error) {
-      console.error('Error archiving habit:', error)
-      toast.error('Failed to archive habit')
+      console.error('Error archiving lifestyleFactor:', error)
+      toast.error('Failed to archive lifestyle factor')
     }
   }
 
-  const handleDeleteHabit = async (id: number, name: string) => {
+  const handleDeleteLifestyleFactor = async (id: number, name: string) => {
     if (!confirm(`Permanently delete "${name}"?`)) return
     
     try {
-      await habitsApi.delete(id)
-      toast.success('Habit deleted')
+      await lifestyleFactorsApi.delete(id)
+      toast.success('LifestyleFactor deleted')
       loadData()
     } catch (error) {
-      console.error('Error deleting habit:', error)
-      toast.error('Failed to delete habit')
+      console.error('Error deleting lifestyleFactor:', error)
+      toast.error('Failed to delete lifestyle factor')
     }
   }
 
-  const handleToggleHabit = async (habitId: number, completed: boolean) => {
+  const handleToggleLifestyleFactor = async (lifestyleFactorId: number, completed: boolean) => {
     try {
-      const response = await habitEntriesApi.create({
-        habit_id: habitId,
+      const response = await lifestyleFactorEntriesApi.create({
+        lifestyle_factor_id: lifestyleFactorId,
         date: formatDate(selectedDate),
         completed
       })
       
-      const existing = habitEntries.findIndex(
-        e => e.habit_id === habitId && e.date === formatDate(selectedDate)
+      const existing = lifestyleFactorEntries.findIndex(
+        e => e.lifestyle_factor_id === lifestyleFactorId && e.date === formatDate(selectedDate)
       )
       
       if (existing >= 0) {
-        const newEntries = [...habitEntries]
+        const newEntries = [...lifestyleFactorEntries]
         newEntries[existing] = response.data
-        setHabitEntries(newEntries)
+        setLifestyleFactorEntries(newEntries)
       } else {
-        setHabitEntries([...habitEntries, response.data])
+        setLifestyleFactorEntries([...lifestyleFactorEntries, response.data])
       }
       
-      toast.success(completed ? 'Habit completed! 🎉' : 'Habit unchecked')
+      toast.success(completed ? 'LifestyleFactor completed! 🎉' : 'LifestyleFactor unchecked')
     } catch (error) {
-      console.error('Error toggling habit:', error)
-      toast.error('Failed to update habit')
+      console.error('Error toggling lifestyleFactor:', error)
+      toast.error('Failed to update lifestyle factor')
     }
   }
 
@@ -130,24 +130,24 @@ export default function Dashboard() {
   }
 
   const isToday = formatDate(selectedDate) === formatDate(new Date())
-  const completedCount = habitEntries.filter(e => e.completed).length
-  const totalCount = habits.filter(h => h.is_active).length
+  const completedCount = lifestyleFactorEntries.filter(e => e.completed).length
+  const totalCount = lifestyleFactors.filter(h => h.is_active).length
   const completionRate = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0
 
-  // Filter and group habits
-  const activeHabits = habits.filter(h => h.is_active)
-  const filteredHabits = selectedCategory === 'All' 
-    ? activeHabits 
-    : activeHabits.filter(h => h.category === selectedCategory)
+  // Filter and group lifestyleFactors
+  const activeLifestyleFactors = lifestyleFactors.filter(h => h.is_active)
+  const filteredLifestyleFactors = selectedCategory === 'All' 
+    ? activeLifestyleFactors 
+    : activeLifestyleFactors.filter(h => h.category === selectedCategory)
   
-  const groupedHabits = filteredHabits.reduce((groups, habit) => {
-    const category = habit.category || 'General'
+  const groupedLifestyleFactors = filteredLifestyleFactors.reduce((groups, lifestyleFactor) => {
+    const category = lifestyleFactor.category || 'General'
     if (!groups[category]) {
       groups[category] = []
     }
-    groups[category].push(habit)
+    groups[category].push(lifestyleFactor)
     return groups
-  }, {} as Record<string, typeof activeHabits>)
+  }, {} as Record<string, typeof activeLifestyleFactors>)
 
   if (loading) {
     return (
@@ -256,23 +256,23 @@ export default function Dashboard() {
           <TrendingUp className="text-primary-600" size={24} />
         </div>
         
-        {filteredHabits.length === 0 ? (
+        {filteredLifestyleFactors.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-8 text-center">
             <p className="text-gray-500 mb-4">
-              {habits.length === 0 ? 'No habits yet. Create your first habit!' : 'No habits in this category.'}
+              {lifestyleFactors.length === 0 ? 'No lifestyleFactors yet. Create your first habit!' : 'No lifestyleFactors in this category.'}
             </p>
-            {habits.length === 0 && (
+            {lifestyleFactors.length === 0 && (
               <a
-                href="/habits"
+                href="/lifestyleFactors"
                 className="inline-block bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
               >
-                Create Habit
+                Create LifestyleFactor
               </a>
             )}
           </div>
         ) : (
           <div className="space-y-6">
-            {Object.entries(groupedHabits).map(([category, categoryHabits]) => (
+            {Object.entries(groupedLifestyleFactors).map(([category, categoryHabits]) => (
               <div key={category}>
                 {selectedCategory === 'All' && (
                   <h3 className="text-sm font-bold text-gray-600 mb-3 flex items-center">
@@ -284,20 +284,20 @@ export default function Dashboard() {
                 )}
                 
                 <div className="space-y-3">
-                  {categoryHabits.map(habit => {
-                    const entry = habitEntries.find(
-                      e => e.habit_id === habit.id && e.date === formatDate(selectedDate)
+                  {categoryHabits.map(lifestyleFactor => {
+                    const entry = lifestyleFactorEntries.find(
+                      e => e.lifestyle_factor_id === lifestyleFactor.id && e.date === formatDate(selectedDate)
                     )
                     
                     return (
-                      <HabitCard
-                        key={habit.id}
-                        habit={habit}
+                      <LifestyleFactorCard
+                        key={lifestyleFactor.id}
+                        lifestyleFactor={lifestyleFactor}
                         entry={entry}
-                        onToggle={(completed) => handleToggleHabit(habit.id, completed)}
-                        onEdit={() => setEditingHabit(habit)}
-                        onDelete={() => handleDeleteHabit(habit.id, habit.name)}
-                        onArchive={() => handleArchiveHabit(habit.id, habit.name)}
+                        onToggle={(completed) => handleToggleLifestyleFactor(lifestyleFactor.id, completed)}
+                        onEdit={() => setEditingLifestyleFactor(lifestyleFactor)}
+                        onDelete={() => handleDeleteLifestyleFactor(lifestyleFactor.id, lifestyleFactor.name)}
+                        onArchive={() => handleArchiveLifestyleFactor(lifestyleFactor.id, lifestyleFactor.name)}
                       />
                     )
                   })}
@@ -309,12 +309,12 @@ export default function Dashboard() {
       </div>
 
       {/* Edit Modal */}
-      {editingHabit && (
-        <EditHabitModal
-          habit={editingHabit}
-          isOpen={!!editingHabit}
-          onClose={() => setEditingHabit(null)}
-          onSave={handleEditHabit}
+      {editingLifestyleFactor && (
+        <EditLifestyleFactorModal
+          lifestyleFactor={editingLifestyleFactor}
+          isOpen={!!editingLifestyleFactor}
+          onClose={() => setEditingLifestyleFactor(null)}
+          onSave={handleEditLifestyleFactor}
         />
       )}
     </div>

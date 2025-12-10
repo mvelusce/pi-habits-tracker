@@ -1,2 +1,2 @@
-# Backend API for Habits Tracker
+# Backend API for Wellness Log
 

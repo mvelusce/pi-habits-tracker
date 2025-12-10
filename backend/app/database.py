@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 import os
 
 # SQLite database
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./habits_tracker.db")
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./wellness_log.db")
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

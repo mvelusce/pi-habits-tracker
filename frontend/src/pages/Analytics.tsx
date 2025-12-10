@@ -41,7 +41,7 @@ export default function Analytics() {
         setStats({
           avgMood: avgMood,
           totalEntries: trendsRes.data.data.length,
-          topHabit: correlationsRes.data.length > 0 ? correlationsRes.data[0].habit_name : 'N/A'
+          topHabit: correlationsRes.data.length > 0 ? correlationsRes.data[0].lifestyle_factor_name : 'N/A'
         })
       }
     } catch (error) {
@@ -103,7 +103,7 @@ export default function Analytics() {
         
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
           <div className="text-2xl font-bold truncate">{stats.topHabit || 'N/A'}</div>
-          <div className="text-purple-100 mt-1">Top Correlated Habit</div>
+          <div className="text-purple-100 mt-1">Top Correlated LifestyleFactor</div>
         </div>
       </div>
 
@@ -124,12 +124,12 @@ export default function Analytics() {
               .map((corr, i) => (
                 <div key={i} className="p-4 bg-gradient-to-r from-primary-50 to-purple-50 rounded-lg border border-primary-100">
                   <p className="font-medium text-gray-800">
-                    {corr.correlation > 0 ? '✅' : '⚠️'} <strong>{corr.habit_name}</strong>
+                    {corr.correlation > 0 ? '✅' : '⚠️'} <strong>{corr.lifestyle_factor_name}</strong>
                     {' '}appears to be{' '}
                     {corr.correlation > 0 ? 'positively' : 'negatively'} correlated with your mood.
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
-                    When you complete this habit, your mood tends to be{' '}
+                    When you complete this lifestyleFactor, your mood tends to be{' '}
                     {corr.correlation > 0 ? 'better' : 'worse'}.
                   </p>
                 </div>
@@ -148,7 +148,7 @@ export default function Analytics() {
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-semibold text-blue-900 mb-2">📊 About Mood Correlations</h4>
         <p className="text-sm text-blue-800">
-          Correlations show the relationship between completing habits and your mood scores.
+          Correlations show the relationship between completing lifestyleFactors and your mood scores.
           Values range from -1 (strong negative) to +1 (strong positive).
           A result is considered <strong>significant</strong> when p-value &lt; 0.05.
         </p>

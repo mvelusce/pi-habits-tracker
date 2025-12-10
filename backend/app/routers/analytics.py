@@ -10,20 +10,20 @@ from app.database import get_db
 router = APIRouter()
 
 @router.get("/correlations", response_model=List[schemas.CorrelationResult])
-def get_habit_mood_correlations(
+def get_lifestyle_factor_mood_correlations(
     start_date: date = None,
     end_date: date = None,
     min_samples: int = 7,
     db: Session = Depends(get_db)
 ):
     """
-    Calculate correlations between habits and mood scores.
-    Returns correlation coefficient, p-value, and significance for each habit.
+    Calculate correlations between lifestyle factors and mood scores.
+    Returns correlation coefficient, p-value, and significance for each lifestyle factor.
     """
-    # Get all habits (including archived ones for historical data)
-    habits = db.query(models.Habit).all()
+    # Get all lifestyle factors (including archived ones for historical data)
+    lifestyle_factors = db.query(models.LifestyleFactor).all()
     
-    if not habits:
+    if not lifestyle_factors:
         return []
     
     # Get mood entries
@@ -49,31 +49,31 @@ def get_habit_mood_correlations(
     
     results = []
     
-    for habit in habits:
-        # Get habit entries
-        habit_query = db.query(models.HabitEntry).filter(
-            models.HabitEntry.habit_id == habit.id
+    for lifestyle_factor in lifestyle_factors:
+        # Get lifestyle factor entries
+        lifestyle_factor_query = db.query(models.LifestyleFactorEntry).filter(
+            models.LifestyleFactorEntry.lifestyle_factor_id == lifestyle_factor.id
         )
         if start_date:
-            habit_query = habit_query.filter(models.HabitEntry.date >= start_date)
+            lifestyle_factor_query = lifestyle_factor_query.filter(models.LifestyleFactorEntry.date >= start_date)
         if end_date:
-            habit_query = habit_query.filter(models.HabitEntry.date <= end_date)
+            lifestyle_factor_query = lifestyle_factor_query.filter(models.LifestyleFactorEntry.date <= end_date)
         
-        habit_entries = habit_query.all()
+        lifestyle_factor_entries = lifestyle_factor_query.all()
         
-        if not habit_entries:
+        if not lifestyle_factor_entries:
             continue
         
-        # Create DataFrame with habit completion
-        habit_df = pd.DataFrame([
+        # Create DataFrame with lifestyle factor completion
+        lifestyle_factor_df = pd.DataFrame([
             {"date": entry.date, "completed": 1 if entry.completed else 0}
-            for entry in habit_entries
+            for entry in lifestyle_factor_entries
         ])
         
-        # Merge mood and habit data
+        # Merge mood and lifestyle factor data
         # Use LEFT join to include all mood tracking days
-        # Days without habit entries are treated as not completed (0)
-        merged_df = pd.merge(mood_df, habit_df, on="date", how="left")
+        # Days without lifestyle factor entries are treated as not completed (0)
+        merged_df = pd.merge(mood_df, lifestyle_factor_df, on="date", how="left")
         merged_df["completed"] = merged_df["completed"].fillna(0)
         
         # Need minimum number of samples for meaningful correlation
@@ -103,15 +103,15 @@ def get_habit_mood_correlations(
             if not (-1 <= correlation <= 1):
                 continue
         except Exception:
-            # Skip this habit if correlation calculation fails
+            # Skip this lifestyle factor if correlation calculation fails
             continue
         
         # Consider significant if p-value < 0.05
         significant = p_value < 0.05
         
         results.append(schemas.CorrelationResult(
-            habit_name=habit.name,
-            habit_id=habit.id,
+            lifestyle_factor_name=lifestyle_factor.name,
+            lifestyle_factor_id=lifestyle_factor.id,
             correlation=round(correlation, 3),
             p_value=round(p_value, 4),
             significant=significant,
@@ -123,20 +123,20 @@ def get_habit_mood_correlations(
     
     return results
 
-@router.get("/correlations/{habit_id}")
-def get_habit_correlation_details(
-    habit_id: int,
+@router.get("/correlations/{lifestyle_factor_id}")
+def get_lifestyle_factor_correlation_details(
+    lifestyle_factor_id: int,
     start_date: date = None,
     end_date: date = None,
     db: Session = Depends(get_db)
 ):
     """
-    Get detailed correlation data for a specific habit including time-lagged correlations.
-    This can show if completing a habit today affects mood tomorrow or later.
+    Get detailed correlation data for a specific lifestyle factor including time-lagged correlations.
+    This can show if completing a lifestyle factor today affects mood tomorrow or later.
     """
-    habit = db.query(models.Habit).filter(models.Habit.id == habit_id).first()
-    if not habit:
-        raise HTTPException(status_code=404, detail="Habit not found")
+    lifestyle_factor = db.query(models.LifestyleFactor).filter(models.LifestyleFactor.id == lifestyle_factor_id).first()
+    if not lifestyle_factor:
+        raise HTTPException(status_code=404, detail="Lifestyle factor not found")
     
     # Get mood entries
     mood_query = db.query(models.MoodEntry)
@@ -147,20 +147,20 @@ def get_habit_correlation_details(
     
     mood_entries = mood_query.all()
     
-    # Get habit entries
-    habit_query = db.query(models.HabitEntry).filter(
-        models.HabitEntry.habit_id == habit_id
+    # Get lifestyle factor entries
+    lifestyle_factor_query = db.query(models.LifestyleFactorEntry).filter(
+        models.LifestyleFactorEntry.lifestyle_factor_id == lifestyle_factor_id
     )
     if start_date:
-        habit_query = habit_query.filter(models.HabitEntry.date >= start_date)
+        lifestyle_factor_query = lifestyle_factor_query.filter(models.LifestyleFactorEntry.date >= start_date)
     if end_date:
-        habit_query = habit_query.filter(models.HabitEntry.date <= end_date)
+        lifestyle_factor_query = lifestyle_factor_query.filter(models.LifestyleFactorEntry.date <= end_date)
     
-    habit_entries = habit_query.all()
+    lifestyle_factor_entries = lifestyle_factor_query.all()
     
-    if not mood_entries or not habit_entries:
+    if not mood_entries or not lifestyle_factor_entries:
         return {
-            "habit_name": habit.name,
+            "lifestyle_factor_name": lifestyle_factor.name,
             "same_day": None,
             "next_day": None,
             "two_days": None,
@@ -174,16 +174,16 @@ def get_habit_correlation_details(
     ])
     mood_df = mood_df.groupby("date").agg({"mood_score": "mean"}).reset_index()
     
-    habit_df = pd.DataFrame([
+    lifestyle_factor_df = pd.DataFrame([
         {"date": entry.date, "completed": 1 if entry.completed else 0}
-        for entry in habit_entries
+        for entry in lifestyle_factor_entries
     ])
     
     # Calculate correlations with different time lags
     correlations = {}
     
     # Same day correlation
-    merged_same = pd.merge(mood_df, habit_df, on="date", how="left")
+    merged_same = pd.merge(mood_df, lifestyle_factor_df, on="date", how="left")
     merged_same["completed"] = merged_same["completed"].fillna(0)
     if len(merged_same) >= 5:
         corr, p_val = stats.pearsonr(merged_same["completed"], merged_same["mood_score"])
@@ -193,10 +193,10 @@ def get_habit_correlation_details(
             "samples": len(merged_same)
         }
     
-    # Next day correlation (habit today affects mood tomorrow)
-    habit_df_lag1 = habit_df.copy()
-    habit_df_lag1["date"] = habit_df_lag1["date"] + timedelta(days=1)
-    merged_lag1 = pd.merge(mood_df, habit_df_lag1, on="date", how="left")
+    # Next day correlation (lifestyle factor today affects mood tomorrow)
+    lifestyle_factor_df_lag1 = lifestyle_factor_df.copy()
+    lifestyle_factor_df_lag1["date"] = lifestyle_factor_df_lag1["date"] + timedelta(days=1)
+    merged_lag1 = pd.merge(mood_df, lifestyle_factor_df_lag1, on="date", how="left")
     merged_lag1["completed"] = merged_lag1["completed"].fillna(0)
     if len(merged_lag1) >= 5:
         corr, p_val = stats.pearsonr(merged_lag1["completed"], merged_lag1["mood_score"])
@@ -207,9 +207,9 @@ def get_habit_correlation_details(
         }
     
     # Two days later correlation
-    habit_df_lag2 = habit_df.copy()
-    habit_df_lag2["date"] = habit_df_lag2["date"] + timedelta(days=2)
-    merged_lag2 = pd.merge(mood_df, habit_df_lag2, on="date", how="left")
+    lifestyle_factor_df_lag2 = lifestyle_factor_df.copy()
+    lifestyle_factor_df_lag2["date"] = lifestyle_factor_df_lag2["date"] + timedelta(days=2)
+    merged_lag2 = pd.merge(mood_df, lifestyle_factor_df_lag2, on="date", how="left")
     merged_lag2["completed"] = merged_lag2["completed"].fillna(0)
     if len(merged_lag2) >= 5:
         corr, p_val = stats.pearsonr(merged_lag2["completed"], merged_lag2["mood_score"])
@@ -220,7 +220,7 @@ def get_habit_correlation_details(
         }
     
     # Get data points for visualization
-    merged_all = pd.merge(mood_df, habit_df, on="date", how="inner")
+    merged_all = pd.merge(mood_df, lifestyle_factor_df, on="date", how="inner")
     data_points = [
         {
             "date": str(row["date"]),
@@ -231,7 +231,7 @@ def get_habit_correlation_details(
     ]
     
     return {
-        "habit_name": habit.name,
+        "lifestyle_factor_name": lifestyle_factor.name,
         "correlations": correlations,
         "data_points": data_points
     }
@@ -288,16 +288,16 @@ def get_mood_trends(
     
     return {"data": data}
 
-@router.get("/heatmap/{habit_id}")
-def get_habit_heatmap(
-    habit_id: int,
+@router.get("/heatmap/{lifestyle_factor_id}")
+def get_lifestyle_factor_heatmap(
+    lifestyle_factor_id: int,
     year: int = None,
     db: Session = Depends(get_db)
 ):
-    """Get habit completion data for calendar heatmap visualization"""
-    habit = db.query(models.Habit).filter(models.Habit.id == habit_id).first()
-    if not habit:
-        raise HTTPException(status_code=404, detail="Habit not found")
+    """Get lifestyle factor completion data for calendar heatmap visualization"""
+    lifestyle_factor = db.query(models.LifestyleFactor).filter(models.LifestyleFactor.id == lifestyle_factor_id).first()
+    if not lifestyle_factor:
+        raise HTTPException(status_code=404, detail="Lifestyle factor not found")
     
     from datetime import datetime
     if not year:
@@ -306,10 +306,10 @@ def get_habit_heatmap(
     start = date(year, 1, 1)
     end = date(year, 12, 31)
     
-    entries = db.query(models.HabitEntry).filter(
-        models.HabitEntry.habit_id == habit_id,
-        models.HabitEntry.date >= start,
-        models.HabitEntry.date <= end
+    entries = db.query(models.LifestyleFactorEntry).filter(
+        models.LifestyleFactorEntry.lifestyle_factor_id == lifestyle_factor_id,
+        models.LifestyleFactorEntry.date >= start,
+        models.LifestyleFactorEntry.date <= end
     ).all()
     
     data = [
@@ -322,7 +322,7 @@ def get_habit_heatmap(
     ]
     
     return {
-        "habit_name": habit.name,
+        "lifestyle_factor_name": lifestyle_factor.name,
         "year": year,
         "data": data
     }

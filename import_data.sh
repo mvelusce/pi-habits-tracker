@@ -3,7 +3,7 @@
 # Import legacy data script
 # This script imports your old habit data from CSV files
 
-echo "🎯 Habits Tracker - Legacy Data Import"
+echo "🌟 Wellness Log - Legacy Data Import"
 echo "======================================"
 echo ""
 

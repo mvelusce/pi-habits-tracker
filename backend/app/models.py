@@ -3,8 +3,8 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database import Base
 
-class Habit(Base):
-    __tablename__ = "habits"
+class LifestyleFactor(Base):
+    __tablename__ = "lifestyle_factors"
     
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
@@ -16,20 +16,20 @@ class Habit(Base):
     is_active = Column(Boolean, default=True)
     
     # Relationships
-    entries = relationship("HabitEntry", back_populates="habit", cascade="all, delete-orphan")
+    entries = relationship("LifestyleFactorEntry", back_populates="lifestyle_factor", cascade="all, delete-orphan")
 
-class HabitEntry(Base):
-    __tablename__ = "habit_entries"
+class LifestyleFactorEntry(Base):
+    __tablename__ = "lifestyle_factor_entries"
     
     id = Column(Integer, primary_key=True, index=True)
-    habit_id = Column(Integer, ForeignKey("habits.id"), nullable=False)
+    lifestyle_factor_id = Column(Integer, ForeignKey("lifestyle_factors.id"), nullable=False)
     date = Column(Date, nullable=False)
     completed = Column(Boolean, default=False)
     notes = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships
-    habit = relationship("Habit", back_populates="entries")
+    lifestyle_factor = relationship("LifestyleFactor", back_populates="entries")
 
 class MoodEntry(Base):
     __tablename__ = "mood_entries"

@@ -2,18 +2,18 @@ from pydantic import BaseModel, Field
 from datetime import date, datetime
 from typing import Optional, List
 
-# Habit Schemas
-class HabitBase(BaseModel):
+# Lifestyle Factor Schemas
+class LifestyleFactorBase(BaseModel):
     name: str
     description: Optional[str] = None
     color: str = "#3B82F6"
     icon: Optional[str] = None
     category: str = "General"
 
-class HabitCreate(HabitBase):
+class LifestyleFactorCreate(LifestyleFactorBase):
     pass
 
-class HabitUpdate(BaseModel):
+class LifestyleFactorUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     color: Optional[str] = None
@@ -21,7 +21,7 @@ class HabitUpdate(BaseModel):
     category: Optional[str] = None
     is_active: Optional[bool] = None
 
-class Habit(HabitBase):
+class LifestyleFactor(LifestyleFactorBase):
     id: int
     created_at: datetime
     is_active: bool
@@ -29,21 +29,21 @@ class Habit(HabitBase):
     class Config:
         from_attributes = True
 
-# Habit Entry Schemas
-class HabitEntryBase(BaseModel):
-    habit_id: int
+# Lifestyle Factor Entry Schemas
+class LifestyleFactorEntryBase(BaseModel):
+    lifestyle_factor_id: int
     date: date
     completed: bool
     notes: Optional[str] = None
 
-class HabitEntryCreate(HabitEntryBase):
+class LifestyleFactorEntryCreate(LifestyleFactorEntryBase):
     pass
 
-class HabitEntryUpdate(BaseModel):
+class LifestyleFactorEntryUpdate(BaseModel):
     completed: Optional[bool] = None
     notes: Optional[str] = None
 
-class HabitEntry(HabitEntryBase):
+class LifestyleFactorEntry(LifestyleFactorEntryBase):
     id: int
     created_at: datetime
     
@@ -96,16 +96,16 @@ class MoodEntry(MoodEntryBase):
 
 # Analytics Schemas
 class CorrelationResult(BaseModel):
-    habit_name: str
-    habit_id: int
+    lifestyle_factor_name: str
+    lifestyle_factor_id: int
     correlation: float
     p_value: float
     significant: bool
     sample_size: int
 
-class HabitStats(BaseModel):
-    habit_id: int
-    habit_name: str
+class LifestyleFactorStats(BaseModel):
+    lifestyle_factor_id: int
+    lifestyle_factor_name: str
     total_days: int
     completed_days: int
     completion_rate: float

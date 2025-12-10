@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useStore } from '../store/useStore'
-import { habitsApi, HabitStats, Habit } from '../lib/api'
+import { lifestyleFactorsApi, LifestyleFactorStats, LifestyleFactor } from '../lib/api'
 import { Plus, Archive, ArchiveRestore } from 'lucide-react'
 import toast from 'react-hot-toast'
-import EditHabitModal from '../components/EditHabitModal'
+import EditLifestyleFactorModal from '../components/EditLifestyleFactorModal'
 
-export default function Habits() {
-  const { habits, setHabits, addHabit, removeHabit } = useStore()
+export default function LifestyleFactors() {
+  const { lifestyleFactors, setLifestyleFactors, addLifestyleFactor, removeLifestyleFactor } = useStore()
   const [loading, setLoading] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const [habitStats, setHabitStats] = useState<Record<number, HabitStats>>({})
-  const [editingHabit, setEditingHabit] = useState<Habit | null>(null)
+  const [lifestyleFactorStats, setLifestyleFactorStats] = useState<Record<number, LifestyleFactorStats>>({})
+  const [editingLifestyleFactor, setEditingLifestyleFactor] = useState<LifestyleFactor | null>(null)
   const [showArchived, setShowArchived] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [categories, setCategories] = useState<string[]>([])
-  const [newHabit, setNewHabit] = useState({
+  const [newLifestyleFactor, setNewLifestyleFactor] = useState({
     name: '',
     description: '',
     color: '#3B82F6',
@@ -23,32 +23,32 @@ export default function Habits() {
   })
 
   useEffect(() => {
-    loadHabits()
+    loadLifestyleFactors()
     loadCategories()
   }, [showArchived])
 
-  const loadHabits = async () => {
+  const loadLifestyleFactors = async () => {
     try {
       setLoading(true)
-      const response = await habitsApi.getAll(showArchived)
-      const allHabits = response.data
+      const response = await lifestyleFactorsApi.getAll(showArchived)
+      const allLifestyleFactors = response.data
       
-      // When showArchived is true, the API returns all habits, so we need to filter for inactive ones
+      // When showArchived is true, the API returns all lifestyleFactors, so we need to filter for inactive ones
       // When showArchived is false, the API already filters for active only
-      const filtered = showArchived ? allHabits.filter(h => !h.is_active) : allHabits
-      setHabits(filtered)
+      const filtered = showArchived ? allLifestyleFactors.filter(h => !h.is_active) : allLifestyleFactors
+      setLifestyleFactors(filtered)
       
       // Load stats for each habit
-      const statsPromises = filtered.map(h => habitsApi.getStats(h.id))
+      const statsPromises = filtered.map(h => lifestyleFactorsApi.getStats(h.id))
       const statsResults = await Promise.all(statsPromises)
-      const statsMap: Record<number, HabitStats> = {}
+      const statsMap: Record<number, LifestyleFactorStats> = {}
       statsResults.forEach(res => {
-        statsMap[res.data.habit_id] = res.data
+        statsMap[res.data.lifestyle_factor_id] = res.data
       })
-      setHabitStats(statsMap)
+      setLifestyleFactorStats(statsMap)
     } catch (error) {
-      console.error('Error loading habits:', error)
-      toast.error('Failed to load habits')
+      console.error('Error loading lifestyleFactors:', error)
+      toast.error('Failed to load lifestyleFactors')
     } finally {
       setLoading(false)
     }
@@ -56,7 +56,7 @@ export default function Habits() {
 
   const loadCategories = async () => {
     try {
-      const response = await habitsApi.getCategories()
+      const response = await lifestyleFactorsApi.getCategories()
       const uniqueCategories = ['All', ...response.data.categories]
       setCategories(uniqueCategories)
     } catch (error) {
@@ -64,80 +64,80 @@ export default function Habits() {
     }
   }
 
-  const handleCreateHabit = async (e: React.FormEvent) => {
+  const handleCreateLifestyleFactor = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!newHabit.name.trim()) {
+    if (!newLifestyleFactor.name.trim()) {
       toast.error('Please enter a habit name')
       return
     }
 
     try {
-      const response = await habitsApi.create(newHabit)
-      addHabit(response.data)
-      setNewHabit({ name: '', description: '', color: '#3B82F6', icon: '✓', category: 'General' })
+      const response = await lifestyleFactorsApi.create(newLifestyleFactor)
+      addLifestyleFactor(response.data)
+      setNewLifestyleFactor({ name: '', description: '', color: '#3B82F6', icon: '✓', category: 'General' })
       setShowCreateForm(false)
-      toast.success('Habit created successfully! 🎉')
-      loadHabits() // Reload to get stats
+      toast.success('LifestyleFactor created successfully! 🎉')
+      loadLifestyleFactors() // Reload to get stats
     } catch (error) {
-      console.error('Error creating habit:', error)
-      toast.error('Failed to create habit')
+      console.error('Error creating lifestyleFactor:', error)
+      toast.error('Failed to create lifestyle factor')
     }
   }
 
-  const handleEditHabit = async (updatedData: Partial<Habit>) => {
-    if (!editingHabit) return
+  const handleEditLifestyleFactor = async (updatedData: Partial<LifestyleFactor>) => {
+    if (!editingLifestyleFactor) return
     
     try {
-      await habitsApi.update(editingHabit.id, updatedData)
-      toast.success('Habit updated successfully!')
-      loadHabits()
-      setEditingHabit(null)
+      await lifestyleFactorsApi.update(editingLifestyleFactor.id, updatedData)
+      toast.success('LifestyleFactor updated successfully!')
+      loadLifestyleFactors()
+      setEditingLifestyleFactor(null)
     } catch (error) {
-      console.error('Error updating habit:', error)
-      toast.error('Failed to update habit')
+      console.error('Error updating lifestyleFactor:', error)
+      toast.error('Failed to update lifestyle factor')
     }
   }
 
-  const handleArchiveHabit = async (id: number, name: string) => {
+  const handleArchiveLifestyleFactor = async (id: number, name: string) => {
     if (!confirm(`Archive "${name}"? You can restore it later.`)) {
       return
     }
 
     try {
-      await habitsApi.archive(id)
-      toast.success('Habit archived')
-      loadHabits()
+      await lifestyleFactorsApi.archive(id)
+      toast.success('LifestyleFactor archived')
+      loadLifestyleFactors()
     } catch (error) {
-      console.error('Error archiving habit:', error)
-      toast.error('Failed to archive habit')
+      console.error('Error archiving lifestyleFactor:', error)
+      toast.error('Failed to archive lifestyle factor')
     }
   }
 
-  const handleUnarchiveHabit = async (id: number, name: string) => {
+  const handleUnarchiveLifestyleFactor = async (id: number, name: string) => {
     try {
-      await habitsApi.unarchive(id)
+      await lifestyleFactorsApi.unarchive(id)
       toast.success(`"${name}" restored!`)
-      loadHabits()
+      loadLifestyleFactors()
     } catch (error) {
-      console.error('Error unarchiving habit:', error)
-      toast.error('Failed to restore habit')
+      console.error('Error unarchiving lifestyleFactor:', error)
+      toast.error('Failed to restore lifestyle factor')
     }
   }
 
-  const handleDeleteHabit = async (id: number, name: string) => {
+  const handleDeleteLifestyleFactor = async (id: number, name: string) => {
     if (!confirm(`Are you sure you want to permanently delete "${name}"?`)) {
       return
     }
 
     try {
-      await habitsApi.delete(id)
-      removeHabit(id)
-      toast.success('Habit deleted')
-      loadHabits()
+      await lifestyleFactorsApi.delete(id)
+      removeLifestyleFactor(id)
+      toast.success('LifestyleFactor deleted')
+      loadLifestyleFactors()
     } catch (error) {
-      console.error('Error deleting habit:', error)
-      toast.error('Failed to delete habit')
+      console.error('Error deleting lifestyleFactor:', error)
+      toast.error('Failed to delete lifestyle factor')
     }
   }
 
@@ -157,20 +157,20 @@ export default function Habits() {
 
   const iconOptions = ['✓', '💪', '🏃', '📚', '🧘', '💧', '🍎', '😴', '🎯', '✨', '🍷', '🍺', '💊', '🥗', '🚿']
 
-  // Filter habits by category
+  // Filter lifestyleFactors by category
   const filteredHabits = selectedCategory === 'All' 
-    ? habits 
-    : habits.filter(h => h.category === selectedCategory)
+    ? lifestyleFactors 
+    : lifestyleFactors.filter(h => h.category === selectedCategory)
   
-  // Group habits by category
-  const groupedHabits = filteredHabits.reduce((groups, habit) => {
-    const category = habit.category || 'General'
+  // Group lifestyleFactors by category
+  const groupedHabits = filteredHabits.reduce((groups, lifestyleFactor) => {
+    const category = lifestyleFactor.category || 'General'
     if (!groups[category]) {
       groups[category] = []
     }
-    groups[category].push(habit)
+    groups[category].push(lifestyleFactor)
     return groups
-  }, {} as Record<string, typeof habits>)
+  }, {} as Record<string, typeof lifestyleFactors>)
 
   if (loading) {
     return (
@@ -201,7 +201,7 @@ export default function Habits() {
             className="flex items-center space-x-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700"
           >
             <Plus size={20} />
-            <span>New Habit</span>
+            <span>New LifestyleFactor</span>
           </button>
         </div>
       </div>
@@ -232,17 +232,17 @@ export default function Habits() {
 
       {/* Create Form */}
       {showCreateForm && (
-        <form onSubmit={handleCreateHabit} className="bg-white rounded-lg shadow-md p-6 space-y-4">
-          <h3 className="text-lg font-semibold">Create New Habit</h3>
+        <form onSubmit={handleCreateLifestyleFactor} className="bg-white rounded-lg shadow-md p-6 space-y-4">
+          <h3 className="text-lg font-semibold">Create New LifestyleFactor</h3>
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Habit Name *
+              LifestyleFactor Name *
             </label>
             <input
               type="text"
-              value={newHabit.name}
-              onChange={(e) => setNewHabit({ ...newHabit, name: e.target.value })}
+              value={newLifestyleFactor.name}
+              onChange={(e) => setNewLifestyleFactor({ ...newLifestyleFactor, name: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               placeholder="e.g., Exercise, Read, Meditate"
             />
@@ -253,8 +253,8 @@ export default function Habits() {
               Description
             </label>
             <textarea
-              value={newHabit.description}
-              onChange={(e) => setNewHabit({ ...newHabit, description: e.target.value })}
+              value={newLifestyleFactor.description}
+              onChange={(e) => setNewLifestyleFactor({ ...newLifestyleFactor, description: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               placeholder="Optional description..."
               rows={2}
@@ -268,13 +268,13 @@ export default function Habits() {
             {!isCustomCategory ? (
               <div className="space-y-2">
                 <select
-                  value={newHabit.category}
+                  value={newLifestyleFactor.category}
                   onChange={(e) => {
                     if (e.target.value === '__custom__') {
                       setIsCustomCategory(true)
-                      setNewHabit({ ...newHabit, category: '' })
+                      setNewLifestyleFactor({ ...newLifestyleFactor, category: '' })
                     } else {
-                      setNewHabit({ ...newHabit, category: e.target.value })
+                      setNewLifestyleFactor({ ...newLifestyleFactor, category: e.target.value })
                     }
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -291,8 +291,8 @@ export default function Habits() {
               <div className="space-y-2">
                 <input
                   type="text"
-                  value={newHabit.category}
-                  onChange={(e) => setNewHabit({ ...newHabit, category: e.target.value })}
+                  value={newLifestyleFactor.category}
+                  onChange={(e) => setNewLifestyleFactor({ ...newLifestyleFactor, category: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter custom category name..."
                   autoFocus
@@ -301,7 +301,7 @@ export default function Habits() {
                   type="button"
                   onClick={() => {
                     setIsCustomCategory(false)
-                    setNewHabit({ ...newHabit, category: 'General' })
+                    setNewLifestyleFactor({ ...newLifestyleFactor, category: 'General' })
                   }}
                   className="text-sm text-gray-600 hover:text-gray-800"
                 >
@@ -320,9 +320,9 @@ export default function Habits() {
                 <button
                   key={color.value}
                   type="button"
-                  onClick={() => setNewHabit({ ...newHabit, color: color.value })}
+                  onClick={() => setNewLifestyleFactor({ ...newLifestyleFactor, color: color.value })}
                   className={`w-10 h-10 rounded-lg border-2 ${
-                    newHabit.color === color.value ? 'border-gray-800 scale-110' : 'border-gray-300'
+                    newLifestyleFactor.color === color.value ? 'border-gray-800 scale-110' : 'border-gray-300'
                   }`}
                   style={{ backgroundColor: color.value }}
                   title={color.name}
@@ -340,9 +340,9 @@ export default function Habits() {
                 <button
                   key={icon}
                   type="button"
-                  onClick={() => setNewHabit({ ...newHabit, icon })}
+                  onClick={() => setNewLifestyleFactor({ ...newLifestyleFactor, icon })}
                   className={`w-12 h-12 text-2xl border-2 rounded-lg ${
-                    newHabit.icon === icon ? 'border-primary-600 bg-primary-50' : 'border-gray-300'
+                    newLifestyleFactor.icon === icon ? 'border-primary-600 bg-primary-50' : 'border-gray-300'
                   }`}
                 >
                   {icon}
@@ -356,7 +356,7 @@ export default function Habits() {
               type="submit"
               className="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700"
             >
-              Create Habit
+              Create LifestyleFactor
             </button>
             <button
               type="button"
@@ -373,7 +373,7 @@ export default function Habits() {
       <div className="space-y-6">
         {Object.keys(groupedHabits).length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-8 text-center text-gray-500">
-            <p>{showArchived ? 'No archived habits.' : 'No habits yet. Create your first one!'}</p>
+            <p>{showArchived ? 'No archived lifestyleFactors.' : 'No lifestyleFactors yet. Create your first one!'}</p>
           </div>
         ) : (
           Object.entries(groupedHabits).map(([category, categoryHabits]) => (
@@ -386,49 +386,49 @@ export default function Habits() {
               </h3>
               
               <div className="space-y-4">
-                {categoryHabits.map((habit) => {
-                  const stats = habitStats[habit.id]
+                {categoryHabits.map((lifestyleFactor) => {
+                  const stats = lifestyleFactorStats[lifestyleFactor.id]
                   
                   return (
                     <div
-                      key={habit.id}
+                      key={lifestyleFactor.id}
                       className="bg-white rounded-lg shadow-md p-6"
-                      style={{ borderLeft: `4px solid ${habit.color}` }}
+                      style={{ borderLeft: `4px solid ${lifestyleFactor.color}` }}
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center space-x-3">
-                          <span className="text-3xl">{habit.icon}</span>
+                          <span className="text-3xl">{lifestyleFactor.icon}</span>
                           <div>
-                            <h3 className="text-xl font-semibold text-gray-800">{habit.name}</h3>
-                            {habit.description && (
-                              <p className="text-sm text-gray-600">{habit.description}</p>
+                            <h3 className="text-xl font-semibold text-gray-800">{lifestyleFactor.name}</h3>
+                            {lifestyleFactor.description && (
+                              <p className="text-sm text-gray-600">{lifestyleFactor.description}</p>
                             )}
                           </div>
                         </div>
                         <div className="flex space-x-2">
                           <button
-                            onClick={() => setEditingHabit(habit)}
+                            onClick={() => setEditingLifestyleFactor(lifestyleFactor)}
                             className="text-blue-600 hover:text-blue-700 text-sm px-3 py-1 rounded hover:bg-blue-50"
                           >
                             Edit
                           </button>
-                          {habit.is_active ? (
+                          {lifestyleFactor.is_active ? (
                             <button
-                              onClick={() => handleArchiveHabit(habit.id, habit.name)}
+                              onClick={() => handleArchiveLifestyleFactor(lifestyleFactor.id, lifestyleFactor.name)}
                               className="text-orange-600 hover:text-orange-700 text-sm px-3 py-1 rounded hover:bg-orange-50"
                             >
                               Archive
                             </button>
                           ) : (
                             <button
-                              onClick={() => handleUnarchiveHabit(habit.id, habit.name)}
+                              onClick={() => handleUnarchiveLifestyleFactor(lifestyleFactor.id, lifestyleFactor.name)}
                               className="text-green-600 hover:text-green-700 text-sm px-3 py-1 rounded hover:bg-green-50"
                             >
                               Restore
                             </button>
                           )}
                           <button
-                            onClick={() => handleDeleteHabit(habit.id, habit.name)}
+                            onClick={() => handleDeleteLifestyleFactor(lifestyleFactor.id, lifestyleFactor.name)}
                             className="text-red-600 hover:text-red-700 text-sm px-3 py-1 rounded hover:bg-red-50"
                           >
                             Delete
@@ -474,12 +474,12 @@ export default function Habits() {
       </div>
 
       {/* Edit Modal */}
-      {editingHabit && (
-        <EditHabitModal
-          habit={editingHabit}
-          isOpen={!!editingHabit}
-          onClose={() => setEditingHabit(null)}
-          onSave={handleEditHabit}
+      {editingLifestyleFactor && (
+        <EditLifestyleFactorModal
+          lifestyleFactor={editingLifestyleFactor}
+          isOpen={!!editingLifestyleFactor}
+          onClose={() => setEditingLifestyleFactor(null)}
+          onSave={handleEditLifestyleFactor}
         />
       )}
     </div>

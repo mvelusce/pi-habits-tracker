@@ -11,13 +11,13 @@ export default function CorrelationChart({ data }: CorrelationChartProps) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500">
         <p>Not enough data to calculate correlations.</p>
-        <p className="text-sm mt-2">Track habits and mood for at least 7 days to see correlations.</p>
+        <p className="text-sm mt-2">Track lifestyleFactors and mood for at least 7 days to see correlations.</p>
       </div>
     )
   }
 
   const chartData = data.map(item => ({
-    name: item.habit_name,
+    name: item.lifestyle_factor_name,
     correlation: item.correlation,
     significant: item.significant,
     samples: item.sample_size
@@ -34,7 +34,7 @@ export default function CorrelationChart({ data }: CorrelationChartProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-xl font-bold mb-4">Habit-Mood Correlations</h3>
+      <h3 className="text-xl font-bold mb-4">LifestyleFactor-Mood Correlations</h3>
       
       <div className="mb-4 text-sm text-gray-600">
         <p>This chart shows how each habit correlates with your mood.</p>
@@ -80,7 +80,7 @@ export default function CorrelationChart({ data }: CorrelationChartProps) {
 
       <div className="mt-6 space-y-2">
         {data.map((item) => (
-          <div key={item.habit_id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div key={item.lifestyle_factor_id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center space-x-3">
               <div
                 className="w-3 h-3 rounded-full"
@@ -88,7 +88,7 @@ export default function CorrelationChart({ data }: CorrelationChartProps) {
                   backgroundColor: getBarColor(item.correlation, item.significant)
                 }}
               />
-              <span className="font-medium">{item.habit_name}</span>
+              <span className="font-medium">{item.lifestyle_factor_name}</span>
             </div>
             <div className="text-right">
               <p className={`font-semibold ${getCorrelationColor(item.correlation)}`}>

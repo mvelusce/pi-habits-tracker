@@ -1,12 +1,12 @@
 # 🌟 Wellness Log
 
-A self-hosted application for tracking lifestyle factors and mood with correlation analysis. Track your daily lifestyle factors, log your mood throughout the day, and discover patterns between your lifestyle factors and how you feel.
+A self-hosted application for tracking lifestyle factors and well-being metrics with correlation analysis. Track your daily lifestyle factors, log your well-being metrics throughout the day, and discover patterns between your lifestyle factors and how you feel.
 
 ## ✨ Features
 
 - **📊 Lifestyle Factor Tracking**: Create and track multiple daily lifestyle factors
-- **😊 Mood Logging**: Record your mood, energy, and stress levels throughout the day
-- **📈 Correlation Analysis**: Discover statistical relationships between your lifestyle factors and mood
+- **😊 Well-Being Metrics Logging**: Record your well-being metrics, energy, and stress levels throughout the day
+- **📈 Correlation Analysis**: Discover statistical relationships between your lifestyle factors and well-being metrics
 - **📱 Progressive Web App**: Works on web and can be installed on Android devices
 - **🏠 Self-Hosted**: Your data stays on your server
 - **🎨 Modern UI**: Beautiful, responsive interface built with React and Tailwind CSS
@@ -165,31 +165,31 @@ The app will be available at http://localhost:5173
 2. Check off lifestyle factors as you complete them
 3. Use the date selector to view or update past dates
 
-### Logging Mood
+### Logging Well-Being Metrics
 
-1. Navigate to the "Mood" tab
-2. Click "Log Your Mood"
-3. Rate your mood (1-10), energy, and stress levels
+1. Navigate to the "Well-Being Metrics" tab
+2. Click "Log Your Well-Being Metrics"
+3. Rate your well-being metrics (1-10), energy, and stress levels
 4. Optionally add notes and tags
 5. Save the entry
 
-You can log multiple mood entries per day to track changes throughout the day.
+You can log multiple well-being metrics entries per day to track changes throughout the day.
 
 ### Viewing Analytics
 
 1. Go to the "Analytics" tab
 2. Select a time period (7, 14, 30, 60, or 90 days)
 3. View:
-   - Mood trends over time
-   - Lifestyle factor-mood correlations
+   - Well-Being Metrics trends over time
+   - Lifestyle factor-well-being metrics correlations
    - Statistical significance indicators
    - Insights and patterns
 
 ### Understanding Correlations
 
 - **Correlation Range**: -1.0 to +1.0
-  - **Positive** (0 to +1): Lifestyle factor completion associated with better mood
-  - **Negative** (-1 to 0): Lifestyle factor completion associated with worse mood
+  - **Positive** (0 to +1): Lifestyle factor completion associated with better well-being metrics
+  - **Negative** (-1 to 0): Lifestyle factor completion associated with worse well-being metrics
   - **Near Zero**: Little to no relationship
 
 - **Strength**:
@@ -241,7 +241,7 @@ habits-tracker/
 │   │   ├── schemas.py        # Pydantic schemas
 │   │   └── routers/
 │   │       ├── lifestyle_factors.py     # Lifestyle factor endpoints
-│   │       ├── mood.py       # Mood endpoints
+│   │       ├── well-being metrics.py       # Well-Being Metrics endpoints
 │   │       └── analytics.py  # Analytics endpoints
 │   ├── requirements.txt
 │   └── Dockerfile
@@ -274,7 +274,7 @@ The FastAPI backend provides interactive API documentation:
 
 - **lifestyle_factors**: Lifestyle factor definitions (name, color, icon, etc.)
 - **lifestyle_factor_entries**: Daily lifestyle factor completion records
-- **mood_entries**: Mood, energy, and stress logs
+- **well-being metrics_entries**: Well-Being Metrics, energy, and stress logs
 
 ## 🔒 Security Considerations
 

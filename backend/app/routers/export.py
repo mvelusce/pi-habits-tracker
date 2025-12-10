@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Response
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import LifestyleFactor, LifestyleFactorEntry, MoodEntry
+from app.models import LifestyleFactor, LifestyleFactorEntry, WellbeingMetricEntry
 from datetime import datetime
 import csv
 import io
@@ -85,19 +85,19 @@ async def export_lifestyle_factor_entries(
     )
 
 
-@router.get("/mood/export")
-async def export_mood_entries(
+@router.get("/wellbeing/export")
+async def export_wellbeing_metric_entries(
     start_date: str = None,
     end_date: str = None,
     db: Session = Depends(get_db)
 ):
     """Export mood entries to CSV."""
-    query = db.query(MoodEntry)
+    query = db.query(WellbeingMetricEntry)
     
     if start_date:
-        query = query.filter(MoodEntry.date >= start_date)
+        query = query.filter(WellbeingMetricEntry.date >= start_date)
     if end_date:
-        query = query.filter(MoodEntry.date <= end_date)
+        query = query.filter(WellbeingMetricEntry.date <= end_date)
     
     entries = query.all()
     
@@ -125,7 +125,7 @@ async def export_mood_entries(
         ])
     
     output.seek(0)
-    filename = f"mood_export_{datetime.now().strftime('%Y%m%d')}.csv"
+    filename = f"wellbeing_metrics_export_{datetime.now().strftime('%Y%m%d')}.csv"
     return StreamingResponse(
         iter([output.getvalue()]),
         media_type="text/csv",
@@ -170,17 +170,17 @@ async def export_all_data(db: Session = Depends(get_db)):
         zip_file.writestr('lifestyle_factor_entries.csv', entries_csv.getvalue())
         
         # Export mood entries
-        mood_entries = db.query(MoodEntry).all()
+        wellbeing_metric_entries = db.query(WellbeingMetricEntry).all()
         mood_csv = io.StringIO()
         writer = csv.writer(mood_csv)
         writer.writerow(['id', 'date', 'time', 'mood_score', 'energy_level', 'stress_level', 'notes', 'tags', 'created_at'])
-        for entry in mood_entries:
+        for entry in wellbeing_metric_entries:
             writer.writerow([
                 entry.id, entry.date.isoformat(), entry.time.isoformat() if entry.time else '',
                 entry.mood_score, entry.energy_level or '', entry.stress_level or '',
                 entry.notes or '', entry.tags or '', entry.created_at.isoformat()
             ])
-        zip_file.writestr('mood_entries.csv', mood_csv.getvalue())
+        zip_file.writestr('wellbeing_metric_entries.csv', mood_csv.getvalue())
     
     zip_buffer.seek(0)
     filename = f"wellness_log_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"

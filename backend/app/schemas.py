@@ -50,8 +50,8 @@ class LifestyleFactorEntry(LifestyleFactorEntryBase):
     class Config:
         from_attributes = True
 
-# Mood Entry Schemas
-class MoodEntryBase(BaseModel):
+# Well-Being Metric Entry Schemas
+class WellbeingMetricEntryBase(BaseModel):
     date: date
     # Mood scores (1-5 scale, higher is better)
     mood_score: int = Field(ge=1, le=5)
@@ -69,10 +69,10 @@ class MoodEntryBase(BaseModel):
     notes: Optional[str] = None
     tags: Optional[str] = None
 
-class MoodEntryCreate(MoodEntryBase):
+class WellbeingMetricEntryCreate(WellbeingMetricEntryBase):
     pass
 
-class MoodEntryUpdate(BaseModel):
+class WellbeingMetricEntryUpdate(BaseModel):
     mood_score: Optional[int] = Field(None, ge=1, le=5)
     energy_level: Optional[int] = Field(None, ge=1, le=5)
     stress_level: Optional[int] = Field(None, ge=0, le=3)
@@ -86,7 +86,7 @@ class MoodEntryUpdate(BaseModel):
     notes: Optional[str] = None
     tags: Optional[str] = None
 
-class MoodEntry(MoodEntryBase):
+class WellbeingMetricEntry(WellbeingMetricEntryBase):
     id: int
     time: datetime
     created_at: datetime
@@ -112,7 +112,7 @@ class LifestyleFactorStats(BaseModel):
     current_streak: int
     longest_streak: int
 
-class MoodStats(BaseModel):
+class WellbeingMetricStats(BaseModel):
     average_mood: float
     average_energy: Optional[float]
     average_stress: Optional[float]

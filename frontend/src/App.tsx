@@ -3,7 +3,7 @@ import { Toaster } from 'react-hot-toast'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import LifestyleFactors from './pages/LifestyleFactors'
-import HealthWellness from './pages/Mood'
+import WellbeingMetrics from './pages/WellbeingMetrics'
 import Analytics from './pages/Analytics'
 
 function App() {
@@ -38,8 +38,9 @@ function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/lifestyleFactors" element={<LifestyleFactors />} />
-          <Route path="/health" element={<HealthWellness />} />
-          <Route path="/mood" element={<Navigate to="/health" replace />} />
+          <Route path="/wellbeing" element={<WellbeingMetrics />} />
+          <Route path="/health" element={<Navigate to="/wellbeing" replace />} />
+          <Route path="/mood" element={<Navigate to="/wellbeing" replace />} />
           <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </Layout>

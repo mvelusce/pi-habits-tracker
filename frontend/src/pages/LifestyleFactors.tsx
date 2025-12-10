@@ -183,7 +183,7 @@ export default function LifestyleFactors() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Manage Habits</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Manage Lifestyle Factors</h1>
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setShowArchived(!showArchived)}

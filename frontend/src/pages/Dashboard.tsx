@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useStore } from '../store/useStore'
-import { lifestyleFactorsApi, lifestyleFactorEntriesApi, moodApi, LifestyleFactor } from '../lib/api'
+import { lifestyleFactorsApi, lifestyleFactorEntriesApi, wellbeingApi, LifestyleFactor } from '../lib/api'
 import { formatDate, formatDisplayDate, getMoodEmoji } from '../lib/utils'
 import LifestyleFactorCard from '../components/LifestyleFactorCard'
 import EditLifestyleFactorModal from '../components/EditLifestyleFactorModal'
@@ -26,7 +26,7 @@ export default function Dashboard() {
       const [habitsRes, entriesRes, moodRes] = await Promise.all([
         lifestyleFactorsApi.getAll(),
         lifestyleFactorEntriesApi.getByDate(formatDate(selectedDate)),
-        moodApi.getByDate(formatDate(selectedDate))
+        wellbeingApi.getByDate(formatDate(selectedDate))
       ])
       
       setLifestyleFactors(habitsRes.data)
@@ -252,7 +252,7 @@ export default function Dashboard() {
       {/* Habits List */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-800">Your Habits</h2>
+          <h2 className="text-xl font-bold text-gray-800">Your Lifestyle Factors</h2>
           <TrendingUp className="text-primary-600" size={24} />
         </div>
         

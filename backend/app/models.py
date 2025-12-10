@@ -31,8 +31,8 @@ class LifestyleFactorEntry(Base):
     # Relationships
     lifestyle_factor = relationship("LifestyleFactor", back_populates="entries")
 
-class MoodEntry(Base):
-    __tablename__ = "mood_entries"
+class WellbeingMetricEntry(Base):
+    __tablename__ = "wellbeing_metric_entries"
     
     id = Column(Integer, primary_key=True, index=True)
     date = Column(Date, nullable=False)

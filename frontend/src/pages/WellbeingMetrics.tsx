@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
-import { moodApi, MoodEntry } from '../lib/api'
+import { wellbeingApi, WellbeingMetricEntry } from '../lib/api'
 import { formatDate, formatDisplayDate, getMoodEmoji } from '../lib/utils'
 import MoodPicker from '../components/MoodPicker'
 import { Heart, Smile } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-export default function HealthWellness() {
+export default function WellbeingMetrics() {
   const [loading, setLoading] = useState(true)
-  const [recentEntries, setRecentEntries] = useState<MoodEntry[]>([])
+  const [recentEntries, setRecentEntries] = useState<WellbeingMetricEntry[]>([])
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
     mood_score: 3,
@@ -47,7 +47,7 @@ export default function HealthWellness() {
   const loadMoodEntries = async () => {
     try {
       setLoading(true)
-      const response = await moodApi.getAll(undefined, undefined, 30)
+      const response = await wellbeingApi.getAll(undefined, undefined, 30)
       setRecentEntries(response.data)
     } catch (error) {
       console.error('Error loading mood entries:', error)
@@ -61,7 +61,7 @@ export default function HealthWellness() {
     e.preventDefault()
 
     try {
-      const response = await moodApi.create({
+      const response = await wellbeingApi.create({
         date: formatDate(new Date()),
         mood_score: formData.mood_score,
         energy_level: formData.energy_level,
@@ -106,7 +106,7 @@ export default function HealthWellness() {
     }
 
     try {
-      await moodApi.delete(id)
+      await wellbeingApi.delete(id)
       setRecentEntries(recentEntries.filter(e => e.id !== id))
       toast.success('Mood entry deleted')
     } catch (error) {
@@ -141,14 +141,14 @@ export default function HealthWellness() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Health & Wellness</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Well-being Metrics</h1>
         <Heart className="text-primary-600" size={28} />
       </div>
 
-      {/* Mood Tracker Section */}
+      {/* Check-ins Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-800">Mood Tracker</h2>
+          <h2 className="text-xl font-bold text-gray-800">Check-ins</h2>
           <Smile className="text-primary-600" size={24} />
         </div>
 
@@ -157,7 +157,7 @@ export default function HealthWellness() {
         <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-md p-6 text-white mb-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold mb-1">Today's Mood</h3>
+              <h3 className="text-lg font-semibold mb-1">Today's Check-ins</h3>
               <p className="text-3xl font-bold">{averageToday.toFixed(1)}/5</p>
               <p className="text-sm text-purple-100 mt-1">{todayEntries.length} check-in(s)</p>
             </div>
@@ -172,14 +172,14 @@ export default function HealthWellness() {
           onClick={() => setShowForm(true)}
           className="w-full bg-primary-600 text-white py-4 rounded-lg hover:bg-primary-700 font-semibold text-lg shadow-md"
         >
-          + Log Your Mood
+          + Check-in
         </button>
       )}
 
       {/* Mood Entry Form */}
       {showForm && (
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-6">
-          <h3 className="text-xl font-semibold">How are you feeling?</h3>
+          <h3 className="text-xl font-semibold">How are you feeling today?</h3>
 
           {/* Mood Section */}
           <div className="space-y-4">
@@ -333,7 +333,7 @@ export default function HealthWellness() {
               type="submit"
               className="flex-1 bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 font-semibold"
             >
-              Save Mood
+              Save
             </button>
             <button
               type="button"
@@ -348,7 +348,7 @@ export default function HealthWellness() {
 
       {/* Recent Entries */}
       <div>
-        <h3 className="text-lg font-bold text-gray-800 mb-4">Recent Mood Check-ins</h3>
+        <h3 className="text-lg font-bold text-gray-800 mb-4">Recent Check-ins</h3>
         
         {recentEntries.length === 0 ? (
           <div className="bg-gray-50 rounded-lg p-8 text-center text-gray-500">

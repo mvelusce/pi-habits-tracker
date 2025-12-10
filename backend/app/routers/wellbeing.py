@@ -7,10 +7,10 @@ from app.database import get_db
 
 router = APIRouter()
 
-@router.post("/", response_model=schemas.MoodEntry)
-def create_mood_entry(entry: schemas.MoodEntryCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=schemas.WellbeingMetricEntry)
+def create_wellbeing_metric_entry(entry: schemas.WellbeingMetricEntryCreate, db: Session = Depends(get_db)):
     """Create a new mood entry"""
-    db_entry = models.MoodEntry(
+    db_entry = models.WellbeingMetricEntry(
         **entry.model_dump(),
         time=datetime.utcnow()
     )
@@ -19,46 +19,46 @@ def create_mood_entry(entry: schemas.MoodEntryCreate, db: Session = Depends(get_
     db.refresh(db_entry)
     return db_entry
 
-@router.get("/", response_model=List[schemas.MoodEntry])
-def get_mood_entries(
+@router.get("/", response_model=List[schemas.WellbeingMetricEntry])
+def get_wellbeing_metric_entries(
     start_date: date = None,
     end_date: date = None,
     limit: int = 100,
     db: Session = Depends(get_db)
 ):
     """Get mood entries with optional date filtering"""
-    query = db.query(models.MoodEntry)
+    query = db.query(models.WellbeingMetricEntry)
     
     if start_date:
-        query = query.filter(models.MoodEntry.date >= start_date)
+        query = query.filter(models.WellbeingMetricEntry.date >= start_date)
     if end_date:
-        query = query.filter(models.MoodEntry.date <= end_date)
+        query = query.filter(models.WellbeingMetricEntry.date <= end_date)
     
-    return query.order_by(models.MoodEntry.date.desc()).limit(limit).all()
+    return query.order_by(models.WellbeingMetricEntry.date.desc()).limit(limit).all()
 
-@router.get("/{entry_id}", response_model=schemas.MoodEntry)
-def get_mood_entry(entry_id: int, db: Session = Depends(get_db)):
+@router.get("/{entry_id}", response_model=schemas.WellbeingMetricEntry)
+def get_wellbeing_metric_entry(entry_id: int, db: Session = Depends(get_db)):
     """Get a specific mood entry"""
-    entry = db.query(models.MoodEntry).filter(models.MoodEntry.id == entry_id).first()
+    entry = db.query(models.WellbeingMetricEntry).filter(models.WellbeingMetricEntry.id == entry_id).first()
     if not entry:
         raise HTTPException(status_code=404, detail="Mood entry not found")
     return entry
 
-@router.get("/date/{entry_date}", response_model=List[schemas.MoodEntry])
-def get_mood_entries_by_date(entry_date: date, db: Session = Depends(get_db)):
+@router.get("/date/{entry_date}", response_model=List[schemas.WellbeingMetricEntry])
+def get_wellbeing_metric_entries_by_date(entry_date: date, db: Session = Depends(get_db)):
     """Get all mood entries for a specific date"""
-    return db.query(models.MoodEntry).filter(
-        models.MoodEntry.date == entry_date
-    ).order_by(models.MoodEntry.time).all()
+    return db.query(models.WellbeingMetricEntry).filter(
+        models.WellbeingMetricEntry.date == entry_date
+    ).order_by(models.WellbeingMetricEntry.time).all()
 
-@router.put("/{entry_id}", response_model=schemas.MoodEntry)
-def update_mood_entry(
+@router.put("/{entry_id}", response_model=schemas.WellbeingMetricEntry)
+def update_wellbeing_metric_entry(
     entry_id: int,
-    entry_update: schemas.MoodEntryUpdate,
+    entry_update: schemas.WellbeingMetricEntryUpdate,
     db: Session = Depends(get_db)
 ):
     """Update a mood entry"""
-    db_entry = db.query(models.MoodEntry).filter(models.MoodEntry.id == entry_id).first()
+    db_entry = db.query(models.WellbeingMetricEntry).filter(models.WellbeingMetricEntry.id == entry_id).first()
     if not db_entry:
         raise HTTPException(status_code=404, detail="Mood entry not found")
     
@@ -71,9 +71,9 @@ def update_mood_entry(
     return db_entry
 
 @router.delete("/{entry_id}")
-def delete_mood_entry(entry_id: int, db: Session = Depends(get_db)):
+def delete_wellbeing_metric_entry(entry_id: int, db: Session = Depends(get_db)):
     """Delete a mood entry"""
-    db_entry = db.query(models.MoodEntry).filter(models.MoodEntry.id == entry_id).first()
+    db_entry = db.query(models.WellbeingMetricEntry).filter(models.WellbeingMetricEntry.id == entry_id).first()
     if not db_entry:
         raise HTTPException(status_code=404, detail="Mood entry not found")
     
@@ -81,24 +81,24 @@ def delete_mood_entry(entry_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Mood entry deleted successfully"}
 
-@router.get("/stats/summary", response_model=schemas.MoodStats)
+@router.get("/stats/summary", response_model=schemas.WellbeingMetricStats)
 def get_mood_stats(
     start_date: date = None,
     end_date: date = None,
     db: Session = Depends(get_db)
 ):
     """Get mood statistics for a date range"""
-    query = db.query(models.MoodEntry)
+    query = db.query(models.WellbeingMetricEntry)
     
     if start_date:
-        query = query.filter(models.MoodEntry.date >= start_date)
+        query = query.filter(models.WellbeingMetricEntry.date >= start_date)
     if end_date:
-        query = query.filter(models.MoodEntry.date <= end_date)
+        query = query.filter(models.WellbeingMetricEntry.date <= end_date)
     
     entries = query.all()
     
     if not entries:
-        return schemas.MoodStats(
+        return schemas.WellbeingMetricStats(
             average_mood=0.0,
             average_energy=None,
             average_stress=None,
@@ -145,7 +145,7 @@ def get_mood_stats(
     
     dates = [e.date for e in entries]
     
-    return schemas.MoodStats(
+    return schemas.WellbeingMetricStats(
         average_mood=round(avg_mood, 2),
         average_energy=round(avg_energy, 2) if avg_energy else None,
         average_stress=round(avg_stress, 2) if avg_stress else None,

@@ -12,7 +12,7 @@ export default function Layout({ children }: LayoutProps) {
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
     { path: '/lifestyleFactors', label: 'Lifestyle Factors', icon: CheckSquare },
-    { path: '/health', label: 'Health', icon: Heart },
+    { path: '/wellbeing', label: 'Well-Being Metrics', icon: Heart },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 },
   ]
   

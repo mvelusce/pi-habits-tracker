@@ -101,7 +101,7 @@ export interface LifestyleFactorEntry {
   created_at: string
 }
 
-export interface MoodEntry {
+export interface WellbeingMetricEntry {
   id: number
   date: string
   time: string
@@ -167,19 +167,19 @@ export const lifestyleFactorEntriesApi = {
   getByDate: (date: string) => api.get<LifestyleFactorEntry[]>(`/api/lifestyle-factors/entries/date/${date}`),
 }
 
-// Mood API
-export const moodApi = {
-  create: (data: Partial<MoodEntry>) => api.post<MoodEntry>('/api/mood', data),
+// Well-Being Metrics API
+export const wellbeingApi = {
+  create: (data: Partial<WellbeingMetricEntry>) => api.post<WellbeingMetricEntry>('/api/wellbeing', data),
   getAll: (startDate?: string, endDate?: string, limit?: number) => 
-    api.get<MoodEntry[]>('/api/mood', {
+    api.get<WellbeingMetricEntry[]>('/api/wellbeing', {
       params: { start_date: startDate, end_date: endDate, limit }
     }),
-  getOne: (id: number) => api.get<MoodEntry>(`/api/mood/${id}`),
-  getByDate: (date: string) => api.get<MoodEntry[]>(`/api/mood/date/${date}`),
-  update: (id: number, data: Partial<MoodEntry>) => api.put<MoodEntry>(`/api/mood/${id}`, data),
-  delete: (id: number) => api.delete(`/api/mood/${id}`),
+  getOne: (id: number) => api.get<WellbeingMetricEntry>(`/api/wellbeing/${id}`),
+  getByDate: (date: string) => api.get<WellbeingMetricEntry[]>(`/api/wellbeing/date/${date}`),
+  update: (id: number, data: Partial<WellbeingMetricEntry>) => api.put<WellbeingMetricEntry>(`/api/wellbeing/${id}`, data),
+  delete: (id: number) => api.delete(`/api/wellbeing/${id}`),
   getStats: (startDate?: string, endDate?: string) => 
-    api.get('/api/mood/stats/summary', {
+    api.get('/api/wellbeing/stats/summary', {
       params: { start_date: startDate, end_date: endDate }
     }),
 }
@@ -195,7 +195,7 @@ export const analyticsApi = {
       params: { start_date: startDate, end_date: endDate }
     }),
   getMoodTrends: (startDate?: string, endDate?: string) => 
-    api.get('/api/analytics/trends/mood', {
+    api.get('/api/analytics/trends/wellbeing', {
       params: { start_date: startDate, end_date: endDate }
     }),
   getLifestyleFactorHeatmap: (lifestyleFactorId: number, year?: number) => 

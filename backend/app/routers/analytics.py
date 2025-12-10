@@ -27,11 +27,11 @@ def get_lifestyle_factor_mood_correlations(
         return []
     
     # Get mood entries
-    mood_query = db.query(models.MoodEntry)
+    mood_query = db.query(models.WellbeingMetricEntry)
     if start_date:
-        mood_query = mood_query.filter(models.MoodEntry.date >= start_date)
+        mood_query = mood_query.filter(models.WellbeingMetricEntry.date >= start_date)
     if end_date:
-        mood_query = mood_query.filter(models.MoodEntry.date <= end_date)
+        mood_query = mood_query.filter(models.WellbeingMetricEntry.date <= end_date)
     
     mood_entries = mood_query.all()
     
@@ -139,11 +139,11 @@ def get_lifestyle_factor_correlation_details(
         raise HTTPException(status_code=404, detail="Lifestyle factor not found")
     
     # Get mood entries
-    mood_query = db.query(models.MoodEntry)
+    mood_query = db.query(models.WellbeingMetricEntry)
     if start_date:
-        mood_query = mood_query.filter(models.MoodEntry.date >= start_date)
+        mood_query = mood_query.filter(models.WellbeingMetricEntry.date >= start_date)
     if end_date:
-        mood_query = mood_query.filter(models.MoodEntry.date <= end_date)
+        mood_query = mood_query.filter(models.WellbeingMetricEntry.date <= end_date)
     
     mood_entries = mood_query.all()
     
@@ -243,12 +243,12 @@ def get_mood_trends(
     db: Session = Depends(get_db)
 ):
     """Get mood trends over time with daily averages"""
-    query = db.query(models.MoodEntry)
+    query = db.query(models.WellbeingMetricEntry)
     
     if start_date:
-        query = query.filter(models.MoodEntry.date >= start_date)
+        query = query.filter(models.WellbeingMetricEntry.date >= start_date)
     if end_date:
-        query = query.filter(models.MoodEntry.date <= end_date)
+        query = query.filter(models.WellbeingMetricEntry.date <= end_date)
     
     entries = query.all()
     

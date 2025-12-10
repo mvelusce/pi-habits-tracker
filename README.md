@@ -35,9 +35,9 @@ A self-hosted application for tracking lifestyle factors and well-being metrics 
 ```bash
 mkdir -p ~/habits-tracker && cd ~/habits-tracker
 
-wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/docker-compose.prod.yml
+wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/docker-compose.prod.yml
 
-wget -O .env https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/.env.example
+wget -O .env https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/.env.example
 ```
 
 2. Create data directory:
@@ -66,8 +66,8 @@ docker compose up -d
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/mvelusce/pi-habits-tracker.git
-cd pi-habits-tracker
+git clone https://github.com/mvelusce/pi-wellness-log.git
+cd pi-wellness-log
 ```
 
 2. Create environment file (optional, to customize ports):
@@ -328,7 +328,7 @@ MIT License - Feel free to use and modify for your own needs.
 - Run `docker compose logs` to see error messages
 - Ensure ports 9696 and 9797 are available
 - Try `docker compose down -v` to reset volumes
-- If pulling from GHCR fails, check that images exist: `docker pull ghcr.io/mvelusce/pi-habits-tracker-backend:latest`
+- If pulling from GHCR fails, check that images exist: `docker pull ghcr.io/mvelusce/pi-wellness-log-backend:latest`
 
 ### Database errors
 - Check write permissions for the database file

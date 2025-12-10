@@ -36,8 +36,8 @@ docker-compose up -d
 
 Pre-built images support both **amd64** (x86_64) and **arm64** (Raspberry Pi, Apple Silicon):
 
-- `ghcr.io/mvelusce/habits-tracker-backend:latest`
-- `ghcr.io/mvelusce/habits-tracker-frontend:latest`
+- `ghcr.io/mvelusce/wellness-log-backend:latest`
+- `ghcr.io/mvelusce/wellness-log-frontend:latest`
 
 ## 🔄 Updating
 

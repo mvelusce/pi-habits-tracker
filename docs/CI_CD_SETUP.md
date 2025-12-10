@@ -15,8 +15,8 @@ Automatically builds and publishes Docker images to GitHub Container Registry on
 - Multi-platform builds (amd64 + arm64)
 - Automatic semantic versioning
 - Build caching for faster builds
-- Pushes to `ghcr.io/mvelusce/habits-tracker-backend:latest`
-- Pushes to `ghcr.io/mvelusce/habits-tracker-frontend:latest`
+- Pushes to `ghcr.io/mvelusce/wellness-log-backend:latest`
+- Pushes to `ghcr.io/mvelusce/wellness-log-frontend:latest`
 
 ### 2. Deployment Files
 
@@ -80,8 +80,8 @@ docker-compose up -d
 ## 📦 Image Registry
 
 Images will be published at:
-- `ghcr.io/mvelusce/habits-tracker-backend:latest`
-- `ghcr.io/mvelusce/habits-tracker-frontend:latest`
+- `ghcr.io/mvelusce/wellness-log-backend:latest`
+- `ghcr.io/mvelusce/wellness-log-frontend:latest`
 
 **Supported platforms:**
 - `linux/amd64` (Standard x86_64 servers, PCs)
@@ -107,14 +107,14 @@ To enable this workflow, you need to:
    - Publish images (using `GITHUB_TOKEN` automatically provided)
 
 3. **Images will be public** by default
-   - Anyone can pull: `docker pull ghcr.io/mvelusce/habits-tracker-backend:latest`
+   - Anyone can pull: `docker pull ghcr.io/mvelusce/wellness-log-backend:latest`
    - No authentication needed to use images
 
 ## 🏷️ Versioning
 
 ### Latest (main branch)
 ```yaml
-image: ghcr.io/mvelusce/habits-tracker-backend:latest
+image: ghcr.io/mvelusce/wellness-log-backend:latest
 ```
 
 ### Specific versions (git tags)
@@ -124,7 +124,7 @@ git tag v1.0.0
 git push origin v1.0.0
 
 # Users can then use:
-image: ghcr.io/mvelusce/habits-tracker-backend:v1.0.0
+image: ghcr.io/mvelusce/wellness-log-backend:v1.0.0
 ```
 
 ## 🔄 Update Process

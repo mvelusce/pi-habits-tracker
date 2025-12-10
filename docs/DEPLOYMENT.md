@@ -7,17 +7,17 @@ Install using pre-built Docker images from GitHub Container Registry:
 ### One-Line Install
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/install.sh | bash
 ```
 
 ### Manual Install
 
 ```bash
 # Download docker-compose.yml
-wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/docker-compose.prod.yml
+wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/docker-compose.prod.yml
 
 # Download .env.example
-wget -O .env https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/.env.example
+wget -O .env https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/.env.example
 
 # Create data directory
 mkdir -p data
@@ -36,8 +36,8 @@ After installation:
 ## Docker Images
 
 Pre-built images are available on GitHub Container Registry:
-- `ghcr.io/mvelusce/habits-tracker-backend:latest`
-- `ghcr.io/mvelusce/habits-tracker-frontend:latest`
+- `ghcr.io/mvelusce/wellness-log-backend:latest`
+- `ghcr.io/mvelusce/wellness-log-frontend:latest`
 
 ### Supported Platforms
 - `linux/amd64` (x86_64)
@@ -100,7 +100,7 @@ When set, this overrides automatic port-based detection.
 ssh user@your-server.com
 
 # Run installation
-curl -sSL https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/install.sh | bash
 
 # Configure firewall
 sudo ufw allow 3000  # Frontend
@@ -117,7 +117,7 @@ curl -sSL https://get.docker.com | sh
 sudo usermod -aG docker $USER
 
 # Install wellness log
-curl -sSL https://raw.githubusercontent.com/mvelusce/pi-habits-tracker/master/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/install.sh | bash
 ```
 
 ### 4. Behind Reverse Proxy (Nginx, Traefik)
@@ -272,10 +272,10 @@ docker-compose up -d
 ```bash
 # Edit docker-compose.yml
 backend:
-  image: ghcr.io/mvelusce/habits-tracker-backend:v1.0.0
+  image: ghcr.io/mvelusce/wellness-log-backend:v1.0.0
 
 frontend:
-  image: ghcr.io/mvelusce/habits-tracker-frontend:v1.0.0
+  image: ghcr.io/mvelusce/wellness-log-frontend:v1.0.0
 ```
 
 ## Backup & Restore
@@ -382,13 +382,13 @@ If direct test works but reverse proxy fails:
 **General checks:**
 ```bash
 # Verify database file exists
-docker exec habits-tracker-backend ls -la /app/data/habits_tracker.db
+docker exec wellness-log-backend ls -la /app/data/habits_tracker.db
 
 # Check backend logs
-docker logs habits-tracker-backend
+docker logs wellness-log-backend
 
 # Restart backend
-docker restart habits-tracker-backend
+docker restart wellness-log-backend
 ```
 
 ### Database locked error

@@ -233,6 +233,32 @@ If you're running this on a completely private network and want to disable authe
 
 However, this is not recommended as it leaves your personal health data unprotected.
 
+### Accessing the API Documentation
+
+The API documentation (Swagger UI) is protected by authentication. To access it:
+
+1. **Get your bearer token** using the helper script:
+   ```bash
+   ./get_token.sh
+   ```
+   Or manually via cURL:
+   ```bash
+   curl -X POST "http://localhost:9696/api/auth/login" \
+     -H "Content-Type: application/json" \
+     -d '{"username":"youruser","password":"yourpassword"}'
+   ```
+
+2. **Navigate to the API docs**: http://localhost:9696/docs
+
+3. **Authorize**:
+   - Click the green "Authorize" button
+   - Paste your token
+   - Click "Authorize" then "Close"
+
+4. **Test the endpoints!** 🎉
+
+📖 **Full API access guide**: See [docs/API_ACCESS.md](docs/API_ACCESS.md) for detailed instructions on accessing the API with authentication.
+
 ## 📱 Installing as PWA on Android
 
 1. Open the app in Chrome on your Android device
@@ -431,7 +457,6 @@ For issues or questions, please open an issue on the repository.
 ## 🎯 Roadmap
 
 Potential future enhancements:
-- [ ] Protect app with user name and password
 - [ ] More advanced analytics (time-lagged correlations)
 - [ ] Dark mode
 - [ ] Calendar heatmap view

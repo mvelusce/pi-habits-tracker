@@ -6,6 +6,7 @@ A self-hosted application for tracking lifestyle factors and well-being metrics 
 
 - **🔐 Password Protection**: Secure single-user authentication to protect your personal health data
 - **📊 Lifestyle Factor Tracking**: Create and track multiple daily lifestyle factors
+- **📅 Calendar View**: Monthly calendar view to visualize your lifestyle factor completion at a glance
 - **😊 Well-Being Metrics Logging**: Record your well-being metrics, energy, and stress levels throughout the day
 - **📈 Correlation Analysis**: Discover statistical relationships between your lifestyle factors and well-being metrics
 - **📱 Progressive Web App**: Works on web and can be installed on Android devices
@@ -284,6 +285,16 @@ The API documentation (Swagger UI) is protected by authentication. To access it:
 2. Check off lifestyle factors as you complete them
 3. Use the date selector to view or update past dates
 
+### Calendar View
+
+1. Click the "Calendar" tab in the navigation
+2. View your monthly lifestyle factor completion at a glance
+3. Click any day to view and toggle lifestyle factors
+4. Use the filter button to view specific categories
+5. Navigate between months using the arrow buttons
+
+📖 **Full calendar guide**: See [docs/CALENDAR_VIEW.md](docs/CALENDAR_VIEW.md) for detailed information on using the calendar view.
+
 ### Logging Well-Being Metrics
 
 1. Navigate to the "Well-Being Metrics" tab
@@ -461,9 +472,10 @@ For issues or questions, please open an issue on the repository.
 ## 🎯 Roadmap
 
 Potential future enhancements:
+- [x] Calendar view for lifestyle factors
 - [ ] More advanced analytics (time-lagged correlations)
 - [ ] Dark mode
-- [ ] Calendar heatmap view
+- [ ] Week view for more detailed tracking
 
 ---
 

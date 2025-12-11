@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Home, CheckSquare, Heart, BarChart3, LogOut } from 'lucide-react'
+import { Home, CheckSquare, Heart, BarChart3, LogOut, Calendar } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
 interface LayoutProps {
@@ -12,10 +12,11 @@ export default function Layout({ children }: LayoutProps) {
   const { logout } = useAuth()
   
   const navItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/lifestyleFactors', label: 'Lifestyle Factors', icon: CheckSquare },
-    { path: '/wellbeing', label: 'Well-Being Metrics', icon: Heart },
-    { path: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { path: '/dashboard', label: 'Dashboard', shortLabel: 'Home', icon: Home },
+    { path: '/lifestyleFactors', label: 'Lifestyle Factors', shortLabel: 'Habits', icon: CheckSquare },
+    { path: '/calendar', label: 'Calendar', shortLabel: 'Calendar', icon: Calendar },
+    { path: '/wellbeing', label: 'Well-Being Metrics', shortLabel: 'Health', icon: Heart },
+    { path: '/analytics', label: 'Analytics', shortLabel: 'Stats', icon: BarChart3 },
   ]
 
   const handleLogout = () => {
@@ -67,7 +68,8 @@ export default function Layout({ children }: LayoutProps) {
                   }`}
                 >
                   <Icon size={24} />
-                  <span className="text-xs mt-1">{item.label}</span>
+                  <span className="text-xs mt-1 hidden sm:inline">{item.label}</span>
+                  <span className="text-xs mt-1 sm:hidden">{item.shortLabel}</span>
                 </Link>
               )
             })}

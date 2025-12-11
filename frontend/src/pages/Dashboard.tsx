@@ -203,7 +203,7 @@ export default function Dashboard() {
             <h2 className="text-2xl font-bold">
               {completedCount} / {totalCount}
             </h2>
-            <p className="text-primary-100">Habits Completed</p>
+            <p className="text-primary-100">Lifestyle Factors Completed</p>
           </div>
           <div className="text-5xl">
             {completionRate === 100 ? '🌟' : completionRate >= 75 ? '🔥' : completionRate >= 50 ? '💪' : '🌱'}

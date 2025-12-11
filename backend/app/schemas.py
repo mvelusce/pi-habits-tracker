@@ -126,3 +126,28 @@ class WellbeingMetricStats(BaseModel):
     total_entries: int
     date_range: dict
 
+# Authentication Schemas
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+
+class User(BaseModel):
+    id: int
+    username: str
+    created_at: datetime
+    is_active: bool
+    
+    class Config:
+        from_attributes = True
+

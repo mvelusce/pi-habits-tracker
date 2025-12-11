@@ -1,49 +1,77 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import LifestyleFactors from './pages/LifestyleFactors'
 import WellbeingMetrics from './pages/WellbeingMetrics'
 import Analytics from './pages/Analytics'
+import { Login } from './pages/Login'
+
+const ProtectedRoutes = () => {
+  const { isAuthenticated, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <Login />
+  }
+
+  return (
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/lifestyleFactors" element={<LifestyleFactors />} />
+        <Route path="/wellbeing" element={<WellbeingMetrics />} />
+        <Route path="/health" element={<Navigate to="/wellbeing" replace />} />
+        <Route path="/mood" element={<Navigate to="/wellbeing" replace />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </Layout>
+  )
+}
 
 function App() {
   return (
     <Router>
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-          success: {
-            duration: 2000,
-            iconTheme: {
-              primary: '#10b981',
-              secondary: '#fff',
+      <AuthProvider>
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#363636',
+              color: '#fff',
             },
-          },
-          error: {
-            duration: 4000,
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
+            success: {
+              duration: 2000,
+              iconTheme: {
+                primary: '#10b981',
+                secondary: '#fff',
+              },
             },
-          },
-        }}
-      />
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/lifestyleFactors" element={<LifestyleFactors />} />
-          <Route path="/wellbeing" element={<WellbeingMetrics />} />
-          <Route path="/health" element={<Navigate to="/wellbeing" replace />} />
-          <Route path="/mood" element={<Navigate to="/wellbeing" replace />} />
-          <Route path="/analytics" element={<Analytics />} />
-        </Routes>
-      </Layout>
+            error: {
+              duration: 4000,
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+        <ProtectedRoutes />
+      </AuthProvider>
     </Router>
   )
 }

@@ -6,8 +6,9 @@ import pandas as pd
 from scipy import stats
 from app import models, schemas
 from app.database import get_db
+from app.auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 @router.get("/correlations", response_model=List[schemas.CorrelationResult])
 def get_lifestyle_factor_mood_correlations(

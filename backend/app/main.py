@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from app.database import engine, Base
-from app.routers import lifestyle_factors, wellbeing, analytics, export
+from app.routers import lifestyle_factors, wellbeing, analytics, export, auth
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -26,7 +26,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
+# Auth router (public, no authentication required)
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+
+# Protected routers (authentication required - will be added via dependency)
 app.include_router(lifestyle_factors.router, prefix="/api/lifestyle-factors", tags=["lifestyle-factors"])
 app.include_router(wellbeing.router, prefix="/api/wellbeing", tags=["wellbeing"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["analytics"])

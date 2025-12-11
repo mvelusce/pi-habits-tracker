@@ -4,8 +4,9 @@ from typing import List
 from datetime import date, datetime
 from app import models, schemas
 from app.database import get_db
+from app.auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 @router.post("/", response_model=schemas.WellbeingMetricEntry)
 def create_wellbeing_metric_entry(entry: schemas.WellbeingMetricEntryCreate, db: Session = Depends(get_db)):

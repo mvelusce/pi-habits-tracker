@@ -68,17 +68,36 @@ export const api = axios.create({
   },
 })
 
-// Add request interceptor to ensure trailing slashes for GET requests
-// This fixes 307 redirect issues with FastAPI
+// Add request interceptor to include auth token
 api.interceptors.request.use((config) => {
+  // Add auth token if available
+  const token = localStorage.getItem('auth_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  
+  // Add trailing slash for GET requests to fix 307 redirect issues with FastAPI
   if (config.method === 'get' && config.url && !config.url.includes('?')) {
-    // Add trailing slash if not present and no query params
     if (!config.url.endsWith('/')) {
       config.url = config.url + '/'
     }
   }
+  
   return config
 })
+
+// Add response interceptor to handle auth errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Clear token and redirect to login
+      localStorage.removeItem('auth_token')
+      window.location.href = '/login'
+    }
+    return Promise.reject(error)
+  }
+)
 
 // Types
 export interface LifestyleFactor {

@@ -4,6 +4,7 @@ A self-hosted application for tracking lifestyle factors and well-being metrics 
 
 ## ✨ Features
 
+- **🔐 Password Protection**: Secure single-user authentication to protect your personal health data
 - **📊 Lifestyle Factor Tracking**: Create and track multiple daily lifestyle factors
 - **😊 Well-Being Metrics Logging**: Record your well-being metrics, energy, and stress levels throughout the day
 - **📈 Correlation Analysis**: Discover statistical relationships between your lifestyle factors and well-being metrics
@@ -143,6 +144,94 @@ npm run dev
 ```
 
 The app will be available at http://localhost:5173
+
+## 🔐 Authentication Setup
+
+The Wellness Log now includes password protection to secure your personal health data. The app supports a single user account.
+
+### First Time Setup
+
+When you first access the application, you'll see a setup screen where you can create your username and password:
+
+1. Navigate to your Wellness Log URL (e.g., http://localhost:9797)
+2. You'll see the "Initial Setup" screen
+3. Enter your desired username and password (minimum 4 characters)
+4. Confirm your password
+5. Click "Create Account"
+
+You'll be automatically logged in and can start using the app.
+
+### Alternative: Create User via Command Line
+
+If you prefer to create the user via command line (especially useful for automated setups):
+
+```bash
+# Enter the backend container
+docker compose exec backend bash
+
+# Run the user creation script
+python create_user.py
+
+# Follow the prompts to enter username and password
+```
+
+For local development (non-Docker):
+
+```bash
+cd backend
+source venv/bin/activate
+python create_user.py
+```
+
+### Logging In
+
+After the initial setup, the login screen will appear whenever you access the app:
+
+1. Enter your username and password
+2. Click "Log In"
+3. Your session will remain active for 30 days
+
+### Security Notes
+
+- Passwords are hashed using bcrypt before storage
+- JWT tokens are used for authentication (30-day expiration for convenience on Pi)
+- Only one user account is supported to keep the setup simple
+- The token is stored in browser localStorage
+- You can log out at any time using the logout button in the header
+- **Important**: Change the `SECRET_KEY` in `backend/app/auth.py` for production use
+
+### Changing Your Password
+
+Currently, password changes need to be done via the database. To change your password:
+
+```bash
+# Enter the backend container
+docker compose exec backend bash
+
+# Delete the existing user and recreate
+python -c "
+from app.database import SessionLocal
+from app.models import User
+db = SessionLocal()
+db.query(User).delete()
+db.commit()
+db.close()
+print('User deleted. Run create_user.py to create a new one.')
+"
+
+# Now create a new user
+python create_user.py
+```
+
+### Disabling Authentication (Not Recommended)
+
+If you're running this on a completely private network and want to disable authentication, you can remove the `dependencies=[Depends(get_current_user)]` from the router definitions in:
+- `backend/app/routers/lifestyle_factors.py`
+- `backend/app/routers/wellbeing.py`
+- `backend/app/routers/analytics.py`
+- `backend/app/routers/export.py`
+
+However, this is not recommended as it leaves your personal health data unprotected.
 
 ## 📱 Installing as PWA on Android
 

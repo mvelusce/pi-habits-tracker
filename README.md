@@ -472,9 +472,7 @@ For issues or questions, please open an issue on the repository.
 ## 🎯 Roadmap
 
 Potential future enhancements:
-- [x] Calendar view for lifestyle factors
 - [ ] More advanced analytics (time-lagged correlations)
-- [ ] Dark mode
 - [ ] Week view for more detailed tracking
 
 ---

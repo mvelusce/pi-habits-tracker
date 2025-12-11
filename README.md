@@ -35,9 +35,13 @@ A self-hosted application for tracking lifestyle factors and well-being metrics 
 1. Download the deployment files:
 ```bash
 mkdir -p ~/pi-wellness-log && cd ~/pi-wellness-log
+```
 
+```bash
 wget -O docker-compose.yml https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/docker-compose.prod.yml
+```
 
+```bash
 wget -O .env https://raw.githubusercontent.com/mvelusce/pi-wellness-log/master/.env.example
 ```
 

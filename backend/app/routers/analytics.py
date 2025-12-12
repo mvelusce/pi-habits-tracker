@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Dict, Optional
 from datetime import date, timedelta
 import pandas as pd
+import numpy as np
 from scipy import stats
 from app import models, schemas
 from app.database import get_db
@@ -114,7 +115,7 @@ def get_lifestyle_factor_mood_correlations(
             # Skip if correlation is NaN or infinite
             if not pd.notna(correlation) or not pd.notna(p_value):
                 continue
-            if not pd.isfinite(correlation) or not pd.isfinite(p_value):
+            if not np.isfinite(correlation) or not np.isfinite(p_value):
                 continue
             if not (-1 <= correlation <= 1):
                 continue
@@ -252,7 +253,7 @@ def get_multi_metric_correlations(
                 # Skip if correlation is NaN or infinite
                 if not pd.notna(correlation) or not pd.notna(p_value):
                     continue
-                if not pd.isfinite(correlation) or not pd.isfinite(p_value):
+                if not np.isfinite(correlation) or not np.isfinite(p_value):
                     continue
                 if not (-1 <= correlation <= 1):
                     continue
@@ -390,7 +391,7 @@ def get_lifestyle_factor_correlation_details(
     if len(merged_same) >= 5 and merged_same["completed"].nunique() >= 2 and merged_same[metric].nunique() >= 2:
         try:
             corr, p_val = stats.pearsonr(merged_same["completed"], merged_same[metric])
-            if pd.notna(corr) and pd.notna(p_val) and pd.isfinite(corr) and pd.isfinite(p_val):
+            if pd.notna(corr) and pd.notna(p_val) and np.isfinite(corr) and np.isfinite(p_val):
                 correlations["same_day"] = {
                     "correlation": round(corr, 3),
                     "p_value": round(p_val, 4),
@@ -407,7 +408,7 @@ def get_lifestyle_factor_correlation_details(
     if len(merged_lag1) >= 5 and merged_lag1["completed"].nunique() >= 2 and merged_lag1[metric].nunique() >= 2:
         try:
             corr, p_val = stats.pearsonr(merged_lag1["completed"], merged_lag1[metric])
-            if pd.notna(corr) and pd.notna(p_val) and pd.isfinite(corr) and pd.isfinite(p_val):
+            if pd.notna(corr) and pd.notna(p_val) and np.isfinite(corr) and np.isfinite(p_val):
                 correlations["next_day"] = {
                     "correlation": round(corr, 3),
                     "p_value": round(p_val, 4),
@@ -424,7 +425,7 @@ def get_lifestyle_factor_correlation_details(
     if len(merged_lag2) >= 5 and merged_lag2["completed"].nunique() >= 2 and merged_lag2[metric].nunique() >= 2:
         try:
             corr, p_val = stats.pearsonr(merged_lag2["completed"], merged_lag2[metric])
-            if pd.notna(corr) and pd.notna(p_val) and pd.isfinite(corr) and pd.isfinite(p_val):
+            if pd.notna(corr) and pd.notna(p_val) and np.isfinite(corr) and np.isfinite(p_val):
                 correlations["two_days"] = {
                     "correlation": round(corr, 3),
                     "p_value": round(p_val, 4),

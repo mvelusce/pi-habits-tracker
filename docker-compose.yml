@@ -9,6 +9,7 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/wellness_log.db}
       - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-this-in-production}
+      - DISABLE_AUTH=true
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]

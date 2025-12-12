@@ -15,6 +15,10 @@ SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-this-in-production"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 43200  # 30 days for convenience on Pi
 
+# Development mode: disable authentication (useful for local development and testing)
+# WARNING: Never set this to true in production!
+DISABLE_AUTH = os.getenv("DISABLE_AUTH", "false").lower() in ("true", "1", "yes")
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
 
@@ -60,6 +64,22 @@ def get_current_user(
     db: Session = Depends(get_db)
 ) -> User:
     """Get the current authenticated user from the JWT token."""
+    # Development mode: skip authentication
+    if DISABLE_AUTH:
+        # Return a mock user for development
+        # Try to get the first active user, or create a mock one
+        user = db.query(User).filter(User.is_active == True).first()
+        if user:
+            return user
+        # If no users exist, return a mock user (won't be saved to DB)
+        from app.models import User as UserModel
+        mock_user = UserModel()
+        mock_user.id = 1
+        mock_user.username = "dev_user"
+        mock_user.is_active = True
+        return mock_user
+    
+    # Production mode: full authentication
     token = credentials.credentials
     payload = decode_token(token)
     username: str = payload.get("sub")
